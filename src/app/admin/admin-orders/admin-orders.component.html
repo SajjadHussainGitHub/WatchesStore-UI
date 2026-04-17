@@ -1,0 +1,49 @@
+<div class="container admin-orders py-4">
+  <header class="d-flex flex-wrap justify-content-between align-items-baseline mb-4">
+    <div>
+      <h1 class="h3 font-weight-bold mb-1">Orders</h1>
+      <p class="text-muted small mb-0">All customer orders (demo storage).</p>
+    </div>
+    <a routerLink="/admin/products" class="btn btn-sm btn-outline-secondary">← Admin products</a>
+  </header>
+
+  <div *ngIf="orders.length; else emptyAdmin" class="table-responsive admin-orders__wrap">
+    <table class="table table-sm admin-orders__table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Shipping</th>
+          <th class="text-right">Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of orders">
+          <td><code>{{ o.$key }}</code></td>
+          <td>
+            <div>{{ o.shippingAddress?.email || '—' }}</div>
+            <small class="text-muted">{{ o.userId }}</small>
+          </td>
+          <td>{{ formatDate(o.datePlaced) }}</td>
+          <td>{{ o.shippingMethodLabel || o.shippingMethodId }}</td>
+          <td class="text-right font-weight-bold">{{ o.total | shopCurrency }}</td>
+          <td>
+            <span class="badge badge-light border">{{ o.paymentMethod === 'card' ? 'Card' : 'COD' }}</span>
+          </td>
+          <td>
+            <span class="badge badge-success" *ngIf="o.paymentStatus === 'paid'">Paid</span>
+            <span class="badge badge-secondary" *ngIf="o.paymentStatus === 'pay_on_delivery'">COD</span>
+            <span class="badge badge-warning text-dark" *ngIf="o.paymentStatus === 'pending_online'">Awaiting pay</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #emptyAdmin>
+    <p class="text-muted">No orders yet.</p>
+  </ng-template>
+</div>

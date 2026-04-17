@@ -1,0 +1,303 @@
+<div class="container pd-wrap mt-3 mb-5" *ngIf="product">
+  <div class="row pd-layout">
+    <!-- Left rail: navigation + view thumbnails + trust -->
+    <aside class="col-lg-3 pd-sidebar" aria-label="Product tools">
+      <nav class="pd-sidebar__nav" aria-label="On this page">
+        <span class="pd-sidebar__nav-label">On this page</span>
+        <a class="pd-sidebar__link" href="#pd-overview">Overview</a>
+        <a class="pd-sidebar__link" href="#pd-specifications">Specifications</a>
+        <a class="pd-sidebar__link" href="#pd-feedback-heading">Reviews</a>
+        <ng-container *ngIf="recommended$ | async as recNav">
+          <a
+            *ngIf="recNav.length"
+            class="pd-sidebar__link"
+            href="#pd-recommend-heading"
+            >Recommended</a
+          >
+        </ng-container>
+      </nav>
+
+      <div class="pd-sidebar__thumbs" role="tablist" aria-label="Product views">
+        <button
+          *ngFor="let label of viewLabels; let i = index"
+          type="button"
+          role="tab"
+          class="pd-thumb"
+          [class.pd-thumb--active]="selectedViewIndex === i"
+          [attr.aria-selected]="selectedViewIndex === i"
+          (click)="selectView(i)"
+        >
+          <img
+            [src]="pdpGalleryUrls[i]"
+            [alt]="label + ' of ' + product.title"
+            class="pd-thumb__img"
+          />
+          <span class="pd-thumb__label">{{ label }}</span>
+        </button>
+      </div>
+
+      <div class="pd-sidebar__trust" aria-hidden="true">
+        <div class="pd-trust-item">
+          <i class="fa fa-shield"></i>
+          <span>Authenticity checked</span>
+        </div>
+        <div class="pd-trust-item">
+          <i class="fa fa-truck"></i>
+          <span>Tracked delivery</span>
+        </div>
+        <div class="pd-trust-item">
+          <i class="fa fa-undo"></i>
+          <span>30-day returns</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <div class="col-lg-9 pd-main">
+      <a routerLink="/products" class="pd-back">← Back to products</a>
+
+      <div class="row pd-hero-row">
+        <div class="col-md-7 pd-gallery">
+          <div class="pd-gallery__frame">
+            <img
+              [src]="selectedImageUrl"
+              [alt]="product.title"
+              class="pd-gallery__img img-fluid"
+            />
+          </div>
+
+          <!-- Mobile / sm: alternate control strip (hidden on lg where sidebar thumbs exist) -->
+          <div class="btn-group mt-3 d-lg-none" role="group" aria-label="Select product view">
+            <button
+              *ngFor="let label of viewLabels; let i = index"
+              type="button"
+              class="btn btn-outline-secondary btn-sm"
+              [class.active]="selectedViewIndex === i"
+              (click)="selectView(i)"
+            >
+              {{ label }}
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-5 pd-buy">
+          <p class="pd-buy__eyebrow">{{ brandName }}</p>
+          <h1 class="pd-buy__title">{{ product.title }}</h1>
+          <p class="pd-buy__sku text-muted mb-1" *ngIf="product.modelNumber">
+            Model <span class="pd-buy__mono">{{ product.modelNumber }}</span>
+          </p>
+
+          <div class="pd-rating" *ngIf="product?.rating != null">
+            <div class="pd-stars" aria-label="Rating">
+              <i
+                *ngFor="let s of stars"
+                [ngClass]="getStarIconClass(product.rating, s)"
+              ></i>
+            </div>
+            <div class="pd-rating-count">
+              {{ product.rating | number : "1.1-1" }} · {{ product.ratingCount }} reviews
+            </div>
+          </div>
+
+          <div class="pd-prices">
+            <ng-container *ngIf="hasDiscount(product); else normalPdPrice">
+              <div class="pd-discount-price">
+                {{ product.discountPrice | shopCurrency }}
+              </div>
+              <div class="pd-original-price">
+                {{ product.price | shopCurrency }}
+              </div>
+              <div class="pd-save-badge">Save {{ product.discountPercent }}%</div>
+            </ng-container>
+            <ng-template #normalPdPrice>
+              <div class="pd-discount-price">
+                {{ product.price | shopCurrency }}
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="mt-4" *ngIf="cart$ | async as cart">
+            <button
+              *ngIf="cart.getQuantity(product) === 0; else updateQuantity"
+              type="button"
+              class="btn btn-dark btn-lg px-4 btn-block"
+              (click)="addToCart()"
+            >
+              Add to Cart
+            </button>
+
+            <ng-template #updateQuantity>
+              <product-quantity [product]="product" [shopping-cart]="cart"></product-quantity>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <section class="pd-section pd-overview" id="pd-overview" *ngIf="product.longDescription">
+        <h2 class="pd-section__title pd-section__title--lg">Overview</h2>
+        <p class="pd-overview__copy">{{ product.longDescription }}</p>
+      </section>
+
+      <section
+        class="pd-section pd-specifications"
+        id="pd-specifications"
+        *ngIf="specificationGroups.length"
+        aria-labelledby="pd-specifications-heading"
+      >
+        <h2 id="pd-specifications-heading" class="pd-section__title pd-section__title--lg">
+          Specifications
+        </h2>
+        <p class="pd-section__lead">
+          Full technical attributes for this reference — case, movement, strap, and warranty.
+        </p>
+
+        <div class="pd-spec-grid">
+          <div class="pd-spec-block" *ngFor="let block of specificationGroups">
+            <h3 class="pd-spec-block__title">{{ block.title }}</h3>
+            <dl class="pd-spec-dl">
+              <ng-container *ngFor="let row of block.attrs">
+                <dt class="pd-spec-dt">{{ row.label }}</dt>
+                <dd class="pd-spec-dd">{{ row.value }}</dd>
+              </ng-container>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="pd-section pd-feedback" aria-labelledby="pd-feedback-heading">
+        <h3 id="pd-feedback-heading" class="pd-section__title">Customer feedback</h3>
+        <p class="pd-section__lead">
+          Share your experience or read what others said about this watch.
+        </p>
+
+        <div class="pd-write-review">
+          <h4 class="pd-write-review__title">Write your feedback</h4>
+          <form (ngSubmit)="submitReview()" class="pd-review-form" novalidate>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label class="pd-label" for="review-author">Your name</label>
+                <input
+                  id="review-author"
+                  name="reviewAuthor"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="reviewAuthor"
+                  required
+                  autocomplete="name"
+                  maxlength="80"
+                  placeholder="e.g. Jamie L."
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <span class="pd-label d-block mb-1">Your rating</span>
+                <div
+                  class="pd-star-input"
+                  role="group"
+                  [attr.aria-label]="'Rating ' + reviewRating + ' of 5'"
+                >
+                  <button
+                    *ngFor="let s of stars"
+                    type="button"
+                    class="pd-star-input__btn"
+                    [class.pd-star-input__btn--active]="reviewRating >= s"
+                    (click)="setReviewRating(s)"
+                    [attr.aria-pressed]="reviewRating >= s"
+                    [attr.aria-label]="'Set rating to ' + s + ' of 5'"
+                  >
+                    <i class="fa" [ngClass]="reviewRating >= s ? 'fa-star' : 'fa-star-o'"></i>
+                  </button>
+                </div>
+                <span class="pd-star-input__value">{{ reviewRating }} / 5</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="pd-label" for="review-title"
+                >Review title <span class="text-muted">(optional)</span></label
+              >
+              <input
+                id="review-title"
+                name="reviewTitle"
+                type="text"
+                class="form-control"
+                [(ngModel)]="reviewTitle"
+                maxlength="120"
+                placeholder="Short headline"
+              />
+            </div>
+            <div class="form-group">
+              <label class="pd-label" for="review-comment">Comments</label>
+              <textarea
+                id="review-comment"
+                name="reviewComment"
+                class="form-control pd-review-form__textarea"
+                rows="4"
+                [(ngModel)]="reviewComment"
+                required
+                maxlength="2000"
+                placeholder="What did you think of the build, comfort, and look?"
+              ></textarea>
+            </div>
+            <div
+              *ngIf="reviewFeedback"
+              class="alert"
+              [class.alert-success]="reviewFeedback.type === 'success'"
+              [class.alert-danger]="reviewFeedback.type === 'error'"
+              role="status"
+            >
+              {{ reviewFeedback.text }}
+            </div>
+            <button type="submit" class="btn btn-dark" [disabled]="submittingReview">
+              <span *ngIf="!submittingReview">Submit feedback</span>
+              <span *ngIf="submittingReview">Submitting…</span>
+            </button>
+          </form>
+        </div>
+
+        <h4 class="pd-reviews-list__title" *ngIf="product.reviews?.length">Customer reviews</h4>
+        <div class="row" *ngIf="product.reviews?.length">
+          <div class="col-md-6 mb-3" *ngFor="let review of product.reviews">
+            <article class="pd-review-card">
+              <div class="pd-review-card__head">
+                <div
+                  class="pd-review-card__stars"
+                  [attr.aria-label]="'Rating ' + review.rating + ' of 5'"
+                >
+                  <i
+                    *ngFor="let s of stars"
+                    [ngClass]="getStarIconClass(review.rating, s)"
+                  ></i>
+                </div>
+                <time class="pd-review-card__date" [attr.datetime]="review.date">{{
+                  review.date | date : 'mediumDate'
+                }}</time>
+              </div>
+              <div class="pd-review-card__badges" *ngIf="review.submittedByCustomer">
+                <span class="pd-review-badge">Shopper review</span>
+              </div>
+              <h4 class="pd-review-card__author">{{ review.author }}</h4>
+              <p class="pd-review-card__title" *ngIf="review.title">{{ review.title }}</p>
+              <p class="pd-review-card__comment">{{ review.comment }}</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <ng-container *ngIf="recommended$ | async as recs">
+        <section
+          *ngIf="recs.length"
+          class="pd-section pd-recommend"
+          id="pd-recommend"
+          aria-labelledby="pd-recommend-heading"
+        >
+          <h3 id="pd-recommend-heading" class="pd-section__title">Recommended for you</h3>
+          <p class="pd-section__lead">More from {{ brandName }} — curated for your taste.</p>
+          <div class="row" *ngIf="cart$ | async as cart">
+            <div class="col-6 col-md-3 mb-4" *ngFor="let rp of recs">
+              <product-cart [product]="rp" [shopping-cart]="cart"></product-cart>
+            </div>
+          </div>
+        </section>
+      </ng-container>
+    </div>
+  </div>
+</div>

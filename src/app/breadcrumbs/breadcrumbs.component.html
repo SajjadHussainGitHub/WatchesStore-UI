@@ -1,0 +1,16 @@
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumb mb-3">
+    <li
+      *ngFor="let crumb of breadcrumbs; let i = index"
+      class="breadcrumb-item"
+      [class.active]="i === breadcrumbs.length - 1"
+      [attr.aria-current]="i === breadcrumbs.length - 1 ? 'page' : null"
+    >
+      <ng-container *ngIf="crumb.url && i !== breadcrumbs.length - 1; else labelOnly">
+        <a [routerLink]="crumb.url">{{ crumb.label }}</a>
+      </ng-container>
+      <ng-template #labelOnly>{{ crumb.label }}</ng-template>
+    </li>
+  </ol>
+</nav>
+

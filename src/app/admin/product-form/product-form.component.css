@@ -1,0 +1,24 @@
+.admin-reviews {
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-reviews__title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.admin-reviews__hint {
+  margin-bottom: 0.75rem;
+}
+
+.admin-reviews__table td {
+  vertical-align: middle;
+}
+
+.admin-reviews__excerpt {
+  max-width: 240px;
+  word-break: break-word;
+  font-size: 0.85rem;
+}

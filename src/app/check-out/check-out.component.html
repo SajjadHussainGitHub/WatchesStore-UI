@@ -1,0 +1,313 @@
+<div class="checkout-page" *ngIf="cart$ | async as cart">
+  <div class="container checkout-page__inner py-4 py-md-5" *ngIf="cart.totalItemsCount > 0; else emptyCart">
+    <header class="checkout-page__header mb-4">
+      <p class="checkout-page__eyebrow">Secure checkout</p>
+      <h1 class="checkout-page__title">Complete your order</h1>
+      <p class="checkout-page__lead text-muted">
+        Encrypted session · Your details are used only for delivery and order updates.
+      </p>
+    </header>
+
+    <nav class="checkout-steps mb-4 mb-md-5" aria-label="Checkout progress">
+      <ol class="checkout-steps__list">
+        <li
+          *ngFor="let s of steps"
+          class="checkout-steps__item"
+          [class.checkout-steps__item--active]="currentStep === s.n"
+          [class.checkout-steps__item--done]="currentStep > s.n"
+        >
+          <button
+            type="button"
+            class="checkout-steps__btn"
+            [disabled]="s.n >= currentStep"
+            (click)="goToStep(s.n)"
+          >
+            <span class="checkout-steps__num">{{ s.n }}</span>
+            <span class="checkout-steps__label">{{ s.label }}</span>
+          </button>
+        </li>
+      </ol>
+    </nav>
+
+    <div class="row checkout-page__layout">
+      <div class="col-lg-7 mb-4 mb-lg-0">
+        <!-- Step 1 -->
+        <section *ngIf="currentStep === 1" class="checkout-card" aria-labelledby="checkout-step1-title">
+          <h2 id="checkout-step1-title" class="checkout-card__title">Contact &amp; delivery address</h2>
+          <form #addrForm="ngForm" novalidate>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="co-fullName">Full name <span class="text-danger">*</span></label>
+                <input
+                  id="co-fullName"
+                  name="fullName"
+                  class="form-control"
+                  [(ngModel)]="address.fullName"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="co-email">Email <span class="text-danger">*</span></label>
+                <input
+                  id="co-email"
+                  name="email"
+                  type="email"
+                  class="form-control"
+                  [(ngModel)]="address.email"
+                  required
+                  email
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="co-company">Company (optional)</label>
+              <input
+                id="co-company"
+                name="company"
+                class="form-control"
+                [(ngModel)]="address.company"
+                autocomplete="organization"
+              />
+            </div>
+            <div class="form-group">
+              <label for="co-line1">Address line 1 <span class="text-danger">*</span></label>
+              <input
+                id="co-line1"
+                name="line1"
+                class="form-control"
+                [(ngModel)]="address.line1"
+                required
+                autocomplete="address-line1"
+              />
+            </div>
+            <div class="form-group">
+              <label for="co-line2">Address line 2 (optional)</label>
+              <input
+                id="co-line2"
+                name="line2"
+                class="form-control"
+                [(ngModel)]="address.line2"
+                autocomplete="address-line2"
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="co-city">City <span class="text-danger">*</span></label>
+                <input
+                  id="co-city"
+                  name="city"
+                  class="form-control"
+                  [(ngModel)]="address.city"
+                  required
+                  autocomplete="address-level2"
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="co-region">State / region <span class="text-danger">*</span></label>
+                <input
+                  id="co-region"
+                  name="stateRegion"
+                  class="form-control"
+                  [(ngModel)]="address.stateRegion"
+                  required
+                  autocomplete="address-level1"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="co-postal">Postal code <span class="text-danger">*</span></label>
+                <input
+                  id="co-postal"
+                  name="postalCode"
+                  class="form-control"
+                  [(ngModel)]="address.postalCode"
+                  required
+                  autocomplete="postal-code"
+                />
+              </div>
+              <div class="form-group col-md-8">
+                <mat-form-field appearance="outline" class="checkout-mat-field">
+                  <mat-label>Country *</mat-label>
+                  <mat-select
+                    id="co-country"
+                    name="countryCode"
+                    [(ngModel)]="address.countryCode"
+                    required
+                  >
+                    <mat-option value="">Select country</mat-option>
+                    <mat-option *ngFor="let c of shippingService.countries" [value]="c.code">
+                      {{ c.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="co-phone">Phone <span class="text-danger">*</span></label>
+              <input
+                id="co-phone"
+                name="phone"
+                type="tel"
+                class="form-control"
+                [(ngModel)]="address.phone"
+                required
+                minlength="8"
+                autocomplete="tel"
+              />
+            </div>
+          </form>
+          <div class="checkout-card__actions">
+            <a routerLink="/shopping-cart" class="btn btn-link text-muted px-0">← Back to cart</a>
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              class="checkout-btn-primary"
+              (click)="nextStep()"
+              [disabled]="!isStep1Valid()"
+            >
+              Continue to shipping
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 2 -->
+        <section *ngIf="currentStep === 2" class="checkout-card" aria-labelledby="checkout-step2-title">
+          <h2 id="checkout-step2-title" class="checkout-card__title">Shipping method</h2>
+          <p class="text-muted small mb-3">Choose how fast you’d like your order delivered. All options include tracking.</p>
+          <div class="shipping-options" role="radiogroup" aria-label="Shipping">
+            <label
+              *ngFor="let m of shippingService.methods"
+              class="shipping-option"
+              [class.shipping-option--active]="selectedShippingId === m.id"
+            >
+              <input
+                type="radio"
+                name="shippingMethod"
+                class="shipping-option__input"
+                [value]="m.id"
+                [(ngModel)]="selectedShippingId"
+              />
+              <span class="shipping-option__body">
+                <span class="shipping-option__row">
+                  <span class="shipping-option__label">{{ m.label }}</span>
+                  <span class="shipping-option__price">
+                    <ng-container *ngIf="m.priceEur === 0; else paidShip">Free</ng-container>
+                    <ng-template #paidShip>{{ m.priceEur | shopCurrency }}</ng-template>
+                  </span>
+                </span>
+                <span class="shipping-option__desc">{{ m.description }}</span>
+                <span class="shipping-option__eta">{{ m.eta }}</span>
+              </span>
+            </label>
+          </div>
+          <div class="checkout-card__actions">
+            <button mat-stroked-button type="button" (click)="prevStep()">Back</button>
+            <button mat-flat-button color="primary" type="button" class="checkout-btn-primary" (click)="nextStep()">
+              Continue to review
+            </button>
+          </div>
+        </section>
+
+        <!-- Step 3 -->
+        <section *ngIf="currentStep === 3" class="checkout-card" aria-labelledby="checkout-step3-title">
+          <h2 id="checkout-step3-title" class="checkout-card__title">Review &amp; payment</h2>
+
+          <div class="checkout-review-block mb-4">
+            <h3 class="checkout-review-block__title">Delivery</h3>
+            <p class="mb-1">
+              <strong>{{ address.fullName }}</strong>
+              <span *ngIf="address.company" class="text-muted"> · {{ address.company }}</span>
+            </p>
+            <p class="mb-1 text-muted small">
+              {{ address.line1 }}<span *ngIf="address.line2">, {{ address.line2 }}</span><br />
+              {{ address.city }}, {{ address.stateRegion }} {{ address.postalCode }}<br />
+              {{ countryName(address.countryCode) }}
+            </p>
+            <p class="mb-0 small">
+              <strong>{{ shippingService.getMethodById(selectedShippingId)?.label }}</strong>
+              · {{ shippingService.getMethodById(selectedShippingId)?.eta }}
+            </p>
+          </div>
+
+          <div class="checkout-review-block mb-4">
+            <h3 class="checkout-review-block__title">Payment</h3>
+            <mat-radio-group
+              class="payment-options"
+              name="paymentMethod"
+              [(ngModel)]="paymentMethod"
+              aria-label="Payment method"
+            >
+              <mat-radio-button class="payment-option" [value]="'card'">
+                <span class="d-block font-weight-bold">Credit or debit card</span>
+                <span class="payment-option__hint">You’ll enter card details on the secure payment step after placing the order.</span>
+              </mat-radio-button>
+              <mat-radio-button class="payment-option" [value]="'cod'">
+                <span class="d-block font-weight-bold">Pay on delivery</span>
+                <span class="payment-option__hint">No online payment — we’ll confirm your order and you pay the courier.</span>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div class="alert alert-danger" *ngIf="placeOrderError">{{ placeOrderError }}</div>
+
+          <div class="checkout-card__actions">
+            <button mat-stroked-button type="button" (click)="prevStep()" [disabled]="submitting">
+              Back
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              class="checkout-btn-primary"
+              (click)="confirmOrder(cart)"
+              [disabled]="submitting"
+            >
+              <span *ngIf="!submitting && paymentMethod === 'card'">Place order &amp; continue to payment</span>
+              <span *ngIf="!submitting && paymentMethod === 'cod'">Place order · {{ totalEur(cart) | shopCurrency }}</span>
+              <span *ngIf="submitting">Placing order…</span>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-5">
+        <aside class="checkout-summary-sticky">
+          <shopping-cart-summary
+            [cart]="cart"
+            [subtotalEur]="subtotalEur(cart)"
+            [shippingEur]="shippingEur()"
+            [taxEur]="taxEur(cart)"
+            [totalEur]="totalEur(cart)"
+            [taxLabel]="shippingService.taxLabel"
+            [showBreakdown]="true"
+          ></shopping-cart-summary>
+          <div class="checkout-trust mt-3">
+            <div class="checkout-trust__item">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+              <span>SSL session</span>
+            </div>
+            <div class="checkout-trust__item">
+              <i class="fa fa-truck" aria-hidden="true"></i>
+              <span>Insured shipping</span>
+            </div>
+            <div class="checkout-trust__item">
+              <i class="fa fa-undo" aria-hidden="true"></i>
+              <span>30-day returns</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <div class="container py-5 text-center">
+      <p class="text-muted">Your cart is empty.</p>
+      <a routerLink="/products" class="btn btn-dark">Browse watches</a>
+    </div>
+  </ng-template>
+</div>

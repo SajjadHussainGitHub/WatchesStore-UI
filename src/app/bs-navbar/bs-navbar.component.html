@@ -1,0 +1,203 @@
+<nav
+  class="navbar navbar-expand-lg navbar-dark fixed-top store-navbar"
+  role="navigation"
+>
+  <div class="container store-navbar__inner">
+    <a class="navbar-brand store-navbar__brand" routerLink="/">
+      <img
+        class="store-navbar__logo"
+        src="assets/store-logo.svg"
+        alt="Watches Store"
+      />
+      <span class="store-navbar__brand-text">
+        <strong>Watches</strong>
+        <small class="d-block">Luxury timepieces curated online</small>
+      </span>
+    </a>
+
+    <button
+      class="navbar-toggler store-navbar__toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mx-auto store-navbar__links">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/products">Collections</a>
+        </li>
+        <li class="nav-item" *ngIf="appUser?.isAdmin">
+          <a class="nav-link" routerLink="/admin/products">Manage Products</a>
+        </li>
+      </ul>
+
+      <form class="store-navbar__search" (ngSubmit)="onSearch()" role="search">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-search"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            name="q"
+            [(ngModel)]="searchKeyword"
+            placeholder="Search watches..."
+          />
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-dark">Go</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="store-navbar__actions">
+        <div ngbDropdown class="d-inline-block mr-2" display="dynamic">
+          <button
+            ngbDropdownToggle
+            type="button"
+            class="store-navbar__currency-btn"
+            aria-label="Choose currency"
+            id="currencyMenu"
+          >
+            <i class="fa fa-globe" aria-hidden="true"></i>
+            <span>{{ currencyService.currentCode }}</span>
+          </button>
+          <div
+            ngbDropdownMenu
+            class="store-navbar__dropdown store-navbar__dropdown--currency"
+            aria-labelledby="currencyMenu"
+          >
+            <div class="store-navbar__dropdown-header">Display currency</div>
+            <button
+              *ngFor="let c of currencyService.currencies"
+              ngbDropdownItem
+              type="button"
+              class="dropdown-item"
+              [class.active]="c.code === currencyService.currentCode"
+              (click)="selectCurrency(c.code)"
+            >
+              {{ c.label }}
+            </button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="cart$ | async as cart">
+          <div ngbDropdown class="d-inline-block">
+            <button
+              ngbDropdownToggle
+              type="button"
+              class="store-navbar__cart-btn"
+            >
+              <i class="fa fa-shopping-bag"></i>
+              <span class="store-navbar__cart-count">{{
+                cart.totalItemsCount
+              }}</span>
+            </button>
+            <div ngbDropdownMenu class="store-navbar__dropdown">
+              <div class="store-navbar__dropdown-header">Your Cart</div>
+              <ng-container *ngIf="cart.items?.length; else emptyCart">
+                <div
+                  *ngFor="let item of cart.items.slice(0, 4)"
+                  class="store-navbar__cart-row"
+                >
+                  <div class="store-navbar__cart-row-main">
+                    <div class="store-navbar__cart-row-title">
+                      {{ item.title }}
+                    </div>
+                    <div class="store-navbar__cart-row-sub">
+                      {{ item.quantity }} pcs
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="store-navbar__cart-remove"
+                    (click)="removeCartLine(item.$key, $event)"
+                    [attr.aria-label]="'Remove ' + item.title + ' from cart'"
+                  >
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="text-right mt-2">
+                  <a class="btn btn-sm btn-dark" routerLink="/shopping-cart"
+                    >View Cart</a
+                  >
+                </div>
+              </ng-container>
+              <ng-template #emptyCart>
+                <div class="text-muted p-2">Cart is empty</div>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #anonymousUser>
+          <div class="store-navbar__auth-links">
+            <a class="store-navbar__account-btn" routerLink="/login">
+              <i class="fa fa-user-o"></i>
+              <span>Sign In</span>
+            </a>
+            <!-- <a class="store-navbar__account-btn" routerLink="/register">
+              <i class="fa fa-user-plus"></i>
+              <span>Register</span>
+            </a> -->
+          </div>
+        </ng-template>
+
+        <div
+          ngbDropdown
+          *ngIf="appUser; else anonymousUser"
+          class="d-inline-block"
+        >
+          <button
+            ngbDropdownToggle
+            class="store-navbar__account-btn"
+            id="accountMenu"
+          >
+            <i class="fa fa-user-circle-o"></i>
+            <span>{{ appUser.name }}</span>
+          </button>
+          <div
+            ngbDropdownMenu
+            class="store-navbar__dropdown"
+            aria-labelledby="accountMenu"
+          >
+            <a class="dropdown-item" routerLink="/my/orders">My Orders</a>
+            <ng-container *ngIf="appUser.isAdmin">
+              <a class="dropdown-item" routerLink="/admin/orders"
+                >Manage Orders</a
+              >
+              <a class="dropdown-item" routerLink="/admin/products"
+                >Manage Products</a
+              >
+              <a class="dropdown-item" routerLink="/admin/products/bulk-upload"
+                >Bulk Product Upload</a
+              >
+              <a class="dropdown-item" routerLink="/admin/categories"
+                >Manage Categories</a
+              >
+              <a class="dropdown-item" routerLink="/admin/home-spotlight"
+                >Home slider (new arrivals)</a
+              >
+              <a class="dropdown-item" routerLink="/admin/marketplace"
+                >Marketplace (Free connectors)</a
+              >
+            </ng-container>
+            <button class="dropdown-item" type="button" (click)="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

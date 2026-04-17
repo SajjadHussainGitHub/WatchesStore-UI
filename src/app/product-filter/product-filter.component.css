@@ -1,0 +1,10 @@
+.product-filter {
+  top: 80px;
+}
+
+.product-filter .list-group {
+  /* Keeps the category list usable on smaller screens. */
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

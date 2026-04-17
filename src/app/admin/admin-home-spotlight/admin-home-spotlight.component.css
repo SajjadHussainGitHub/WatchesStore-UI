@@ -1,0 +1,11 @@
+.admin-spotlight {
+  max-width: 960px;
+}
+
+.admin-spotlight__back {
+  margin-bottom: 1rem;
+}
+
+.admin-spotlight__back a {
+  color: #495057;
+}

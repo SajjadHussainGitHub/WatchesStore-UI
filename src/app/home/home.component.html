@@ -1,0 +1,319 @@
+<div class="home-page">
+  <!-- Hero -->
+  <section class="home-hero" aria-labelledby="home-hero-title">
+    <div class="home-hero__mesh" aria-hidden="true"></div>
+    <div class="container home-hero__content">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <p class="home-kicker">Watches Store</p>
+          <h1 id="home-hero-title" class="home-title">
+            Luxury timepieces for the modern collector
+          </h1>
+          <p class="home-subtitle">
+            Explore curated brands, discover standout designs, and build your
+            everyday signature.
+          </p>
+          <div class="home-hero__cta">
+            <a routerLink="/products" class="btn btn-lg mr-2 mb-2 home-btn home-btn--primary"
+              >Shop Watches</a
+            >
+            <a
+              *ngIf="featuredCategories?.length"
+              [routerLink]="['/products']"
+              [queryParams]="{ category: featuredCategories[0].$key }"
+              class="btn btn-lg mb-2 home-btn home-btn--ghost"
+            >
+              Shop Top Brand
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-5 mt-4 mt-lg-0">
+          <div class="home-hero-card">
+            <h5 class="mb-3">World-class shopping, built for confidence</h5>
+            <div class="home-hero-grid">
+              <div class="home-hero-feature">
+                <i class="fa fa-truck"></i>
+                <div>
+                  <div class="home-hero-feature__title">Fast Delivery</div>
+                  <div class="home-hero-feature__sub">Tracked shipping on every order</div>
+                </div>
+              </div>
+              <div class="home-hero-feature">
+                <i class="fa fa-shield"></i>
+                <div>
+                  <div class="home-hero-feature__title">Secure Checkout</div>
+                  <div class="home-hero-feature__sub">Safe payment & protected data</div>
+                </div>
+              </div>
+              <div class="home-hero-feature">
+                <i class="fa fa-headphones"></i>
+                <div>
+                  <div class="home-hero-feature__title">Premium Support</div>
+                  <div class="home-hero-feature__sub">Help that feels human</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spotlight: new arrivals + brands -->
+  <section
+    class="container home-section home-spotlight"
+    *ngIf="highlightSlides.length"
+    aria-labelledby="home-spotlight-title"
+  >
+    <div class="home-section__head">
+      <div>
+        <h2 id="home-spotlight-title" class="mb-0 home-section__title">
+          <span
+            class="home-section__title-icon home-section__title-icon--cyan"
+            aria-hidden="true"
+          ></span
+          >New arrivals &amp; brands
+        </h2>
+        <p *ngIf="curatedSpotlight" class="small text-muted mb-0 mt-1">
+          Curated for this carousel — order matches your admin list.
+        </p>
+      </div>
+      <a routerLink="/products" class="home-link">Explore catalog</a>
+    </div>
+
+    <ngb-carousel
+      class="home-carousel"
+      [interval]="6500"
+      [wrap]="true"
+      [keyboard]="true"
+      [showNavigationArrows]="true"
+      [showNavigationIndicators]="true"
+      [pauseOnHover]="true"
+      [animation]="true"
+    >
+      <ng-template
+        ngbSlide
+        *ngFor="let slide of highlightSlides"
+        [id]="slideId(slide)"
+      >
+        <ng-container [ngSwitch]="slide.kind">
+          <div *ngSwitchCase="'brand'" class="home-slide home-slide--brand home-slide--mesh">
+            <div class="home-slide__inner">
+              <p class="home-slide__eyebrow">Featured brand</p>
+              <h3 class="home-slide__title">{{ slide.category.name }}</h3>
+              <p class="home-slide__desc">
+                Shop the latest drops and signature models from this house.
+              </p>
+              <a
+                class="home-btn home-btn--primary home-slide__cta"
+                routerLink="/products"
+                [queryParams]="{ category: slide.category.$key }"
+                >Shop {{ slide.category.name }}</a
+              >
+            </div>
+          </div>
+
+          <div *ngSwitchCase="'product'" class="home-slide home-slide--product home-slide--mesh">
+            <div class="home-slide__media">
+              <a [routerLink]="['/products', slide.product.$key]">
+                <img
+                  [src]="slide.product.imageUrl"
+                  [alt]="slide.product.title"
+                  class="home-slide__img"
+                />
+              </a>
+            </div>
+            <div class="home-slide__inner home-slide__inner--product">
+              <p class="home-slide__eyebrow home-slide__eyebrow--accent">New arrival</p>
+              <h3 class="home-slide__title">
+                <a [routerLink]="['/products', slide.product.$key]">{{
+                  slide.product.title
+                }}</a>
+              </h3>
+              <p class="home-slide__price" *ngIf="hasDiscount(slide.product); else normalSlidePrice">
+                <span class="home-slide__price-now">{{
+                  slide.product.discountPrice | shopCurrency
+                }}</span>
+                <span class="home-slide__price-was">{{
+                  slide.product.price | shopCurrency
+                }}</span>
+                <span class="home-slide__save" *ngIf="slide.product.discountPercent"
+                  >Save {{ slide.product.discountPercent }}%</span
+                >
+              </p>
+              <ng-template #normalSlidePrice>
+                <p class="home-slide__price">
+                  {{ slide.product.price | shopCurrency }}
+                </p>
+              </ng-template>
+              <a
+                class="home-btn home-btn--primary home-slide__cta"
+                [routerLink]="['/products', slide.product.$key]"
+                >View watch</a
+              >
+            </div>
+          </div>
+        </ng-container>
+      </ng-template>
+    </ngb-carousel>
+  </section>
+
+  <!-- Featured Brands -->
+  <section class="container home-section home-section--tint">
+    <div class="home-section__head">
+      <h2 class="mb-0 home-section__title">
+        <span class="home-section__title-icon" aria-hidden="true"></span
+        >Featured Brands
+      </h2>
+      <a routerLink="/products" class="home-link">View all</a>
+    </div>
+
+    <div class="row">
+      <div
+        class="col-6 col-md-4 col-lg-2 mb-3"
+        *ngFor="let c of featuredCategories"
+      >
+        <a
+          class="home-brand-card"
+          routerLink="/products"
+          [queryParams]="{ category: c.$key }"
+        >
+          {{ c.name }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Watches -->
+  <section class="container home-section">
+    <div class="home-section__head">
+      <h2 class="mb-0 home-section__title">
+        <span class="home-section__title-icon home-section__title-icon--violet" aria-hidden="true"></span
+        >Featured Watches
+      </h2>
+      <a routerLink="/products" class="home-link">Browse catalog</a>
+    </div>
+
+    <div class="row" *ngIf="cart$ | async as cart">
+      <div class="col-6 col-md-3 mb-4" *ngFor="let p of featuredProducts">
+        <product-cart [product]="p" [shopping-cart]="cart"></product-cart>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending -->
+  <section class="container home-section home-section--tint home-section--tint-cool">
+    <div class="home-section__head">
+      <h2 class="mb-0 home-section__title">
+        <span class="home-section__title-icon home-section__title-icon--cyan" aria-hidden="true"></span
+        >Trending Now
+      </h2>
+      <a routerLink="/products" class="home-link">See all</a>
+    </div>
+
+    <div class="row" *ngIf="cart$ | async as cart">
+      <div class="col-6 col-md-3 mb-4" *ngFor="let p of trendingProducts">
+        <product-cart [product]="p" [shopping-cart]="cart"></product-cart>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="home-testimonials">
+    <div class="container home-section">
+      <div class="home-section__head mb-4">
+        <h2 class="mb-0 home-section__title home-section__title--light">
+          Trusted by watch lovers
+        </h2>
+        <span class="home-muted home-muted--on-dark">Premium experience from day one</span>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="home-testimonial-card home-testimonial-card--sunset">
+            <div class="home-stars">
+              <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+            </div>
+            <p class="mb-2">
+              “Beautiful curation. The add-to-cart flow feels fast and smooth.”
+            </p>
+            <strong>— A. Collector</strong>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="home-testimonial-card home-testimonial-card--ocean">
+            <div class="home-stars">
+              <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+            </div>
+            <p class="mb-2">
+              “Great brand variety and the UI looks world-class.”
+            </p>
+            <strong>— M. Enthusiast</strong>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="home-testimonial-card home-testimonial-card--amber">
+            <div class="home-stars">
+              <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+            </div>
+            <p class="mb-2">
+              “Local data means it always works offline. Love it!”
+            </p>
+            <strong>— S. Buyer</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="home-newsletter">
+    <div class="container home-section">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h2 class="mb-2">Get first access to new arrivals</h2>
+          <p class="home-muted mb-0">
+            Weekly highlights, brand drops, and curated recommendations.
+          </p>
+        </div>
+        <div class="col-lg-5 mt-4 mt-lg-0">
+          <div class="input-group home-newsletter__form">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email address"
+              aria-label="Email address"
+            />
+            <div class="input-group-append">
+              <button type="button" class="btn home-btn home-btn--primary">
+                Subscribe
+              </button>
+            </div>
+          </div>
+          <small class="text-muted d-block mt-2">No spam. Unsubscribe anytime.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="home-footer">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-md-6 mb-3 mb-md-0">
+          <strong>Watches Store</strong>
+          <div class="text-muted mt-1">Luxury shopping experience with internal data logic.</div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex flex-wrap">
+            <a class="home-footer__link" routerLink="/products">Catalog</a>
+            <a class="home-footer__link" routerLink="/shopping-cart">Cart</a>
+            <a class="home-footer__link" routerLink="/login">Login</a>
+            <a class="home-footer__link" routerLink="/admin/products">Admin</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,100 @@
+/* World-class luxury breadcrumb styling */
+.breadcrumbs {
+  --store-crumb-bg-top: rgba(255, 255, 255, 0.82);
+  --store-crumb-bg-bot: rgba(246, 241, 232, 0.85);
+  --store-crumb-ink: #0f172a;
+  --store-crumb-ink-soft: #475569;
+  --store-crumb-accent: #b89146;
+  --store-crumb-accent-bright: #d6b87a;
+  --store-crumb-edge: rgba(184, 145, 70, 0.28);
+
+  padding-left: clamp(0.75rem, 3vw, 1.5rem);
+  padding-right: clamp(0.75rem, 3vw, 1.5rem);
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+  margin-top: 0;
+  background: linear-gradient(
+    180deg,
+    var(--store-crumb-bg-top) 0%,
+    var(--store-crumb-bg-bot) 100%
+  );
+  border: 0;
+  border-bottom: 1px solid var(--store-crumb-edge);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  backdrop-filter: blur(12px) saturate(1.08);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumbs::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--store-crumb-accent-bright) 25%,
+    var(--store-crumb-accent) 50%,
+    var(--store-crumb-accent-bright) 75%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.35rem;
+  background: transparent;
+  margin-bottom: 0;
+  padding: 0;
+  font-size: clamp(0.75rem, 0.68rem + 0.35vw, 0.9rem);
+  line-height: 1.35;
+  max-width: 100%;
+}
+
+.breadcrumb-item {
+  min-width: 0;
+  max-width: 100%;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--store-crumb-ink-soft);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '›';
+  color: var(--store-crumb-accent);
+  font-weight: 600;
+  padding-right: 0.35rem;
+  opacity: 0.85;
+}
+
+.breadcrumb-item.active {
+  color: var(--store-crumb-ink);
+  font-weight: 700;
+}
+
+.breadcrumb-item a {
+  color: var(--store-crumb-ink-soft);
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: #0f172a;
+  border-bottom-color: var(--store-crumb-accent-bright);
+  text-decoration: none;
+}

@@ -1,0 +1,113 @@
+<div class="auth-page">
+  <div class="container">
+    <div class="auth-shell">
+      <div class="auth-left">
+        <div class="auth-badge">Secure Access</div>
+        <h1>Welcome back</h1>
+        <p class="auth-subtitle">
+          Sign in to continue your watches shopping experience.
+        </p>
+
+        <ul class="auth-features">
+          <li><i class="fa fa-lock"></i> Local secure session</li>
+          <li><i class="fa fa-shield"></i> Private account data</li>
+          <li><i class="fa fa-bolt"></i> Fast checkout-ready</li>
+        </ul>
+      </div>
+
+      <div class="auth-right">
+        <div class="auth-card">
+          <h2 class="mb-3">Sign in</h2>
+
+          <form #f="ngForm" (ngSubmit)="login()">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="auth-mat-field">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  name="email"
+                  [(ngModel)]="email"
+                  required
+                  email
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="form-group mt-3">
+              <mat-form-field appearance="outline" class="auth-mat-field">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  name="password"
+                  [(ngModel)]="password"
+                  [type]="showPassword ? 'text' : 'password'"
+                  required
+                  minlength="6"
+                />
+              </mat-form-field>
+              <button
+                mat-stroked-button
+                type="button"
+                class="mt-2"
+                (click)="showPassword = !showPassword"
+              >
+                {{ showPassword ? 'Hide password' : 'Show password' }}
+              </button>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="d-flex align-items-center gap-2">
+                <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+                <span>Remember me</span>
+              </label>
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="btn-block mt-3"
+              [disabled]="loading || !email || !password"
+            >
+              <span *ngIf="!loading">Sign in</span>
+              <span *ngIf="loading">Signing in...</span>
+            </button>
+
+            <div class="auth-footer mt-3">
+              <span>New here?</span>
+              <a routerLink="/register">Create account</a>
+            </div>
+          </form>
+
+          <div class="auth-demo-creds mt-4">
+            <p class="auth-demo-creds__title">Demo accounts (local only)</p>
+            <div class="auth-demo-creds__grid">
+              <div *ngFor="let a of demoAccounts; let i = index" class="auth-demo-creds__card">
+                <div class="auth-demo-creds__role">{{ a.role }}</div>
+                <div class="auth-demo-creds__name">{{ a.name }}</div>
+                <dl class="auth-demo-creds__dl">
+                  <dt>Email</dt>
+                  <dd>
+                    <code>{{ a.email }}</code>
+                  </dd>
+                  <dt>Password</dt>
+                  <dd>
+                    <code>{{ a.password }}</code>
+                  </dd>
+                </dl>
+                <button mat-stroked-button type="button" class="btn-block" (click)="fillAccount(i)">
+                  Use this account
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

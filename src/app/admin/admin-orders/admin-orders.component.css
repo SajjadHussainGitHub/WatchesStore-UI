@@ -1,0 +1,17 @@
+.admin-orders__wrap {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.admin-orders__table thead th {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6c757d;
+  border-top: none;
+}
+
+.admin-orders__table td {
+  vertical-align: middle;
+}

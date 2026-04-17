@@ -1,0 +1,39 @@
+.my-orders__title {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.my-orders__table-wrap {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.my-orders__table {
+  margin-bottom: 0;
+}
+
+.my-orders__table thead th {
+  border-top: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.my-orders__badge {
+  background: rgba(201, 168, 108, 0.2);
+  color: #7c5c1e;
+  font-weight: 600;
+}
+
+.font-weight-semibold {
+  font-weight: 600;
+}
+
+.my-orders__empty {
+  border-radius: 16px;
+}

@@ -1,0 +1,99 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "font-awesome/css/font-awesome.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+$primary-color: #b89146;
+$primary-color-hover: #9f7b37;
+
+body {
+  padding-top: 108px;
+  min-height: 100vh;
+  background: radial-gradient(
+      circle at 14% 4%,
+      rgba(214, 184, 122, 0.22) 0%,
+      rgba(214, 184, 122, 0) 34%
+    ),
+    radial-gradient(
+      circle at 86% 0%,
+      rgba(240, 226, 196, 0.55) 0%,
+      rgba(240, 226, 196, 0) 30%
+    ),
+    linear-gradient(170deg, #f7f4ee 0%, #efe8db 52%, #f8f5ef 100%);
+  background-attachment: fixed;
+  color: #1f2937;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 88px;
+  }
+}
+
+.app-shell {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(184, 145, 70, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding-top: 1.1rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+.card,
+.table,
+.list-group-item {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+.card {
+  border: 1px solid rgba(184, 145, 70, 0.16);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: 1.5rem;
+}
+
+/* Default bootstrap nav bars only — .store-navbar sets its own border */
+.navbar:not(.store-navbar) {
+  border-bottom: 3px solid #e7e7e7;
+}
+
+.navbar-light .navbar-brand {
+  color: $primary-color;
+}
+
+.navbar-light .navbar-brand:focus,
+.navbar-light .navbar-brand:hover {
+  color: $primary-color-hover;
+}
+
+.list-group-item.active {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.btn-primary {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.btn-primary:hover {
+  background-color: $primary-color-hover;
+  border-color: $primary-color-hover;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.form-control:focus {
+  border-color: $primary-color;
+}

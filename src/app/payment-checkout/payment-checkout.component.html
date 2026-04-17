@@ -1,0 +1,140 @@
+<div class="pay-page">
+  <div class="container py-5 text-center text-muted" *ngIf="loading">
+    <p class="mb-0">Loading payment…</p>
+  </div>
+
+  <div class="container pay-page__inner py-4 py-md-5" *ngIf="!loading && error">
+    <p class="text-danger text-center mb-3">{{ error }}</p>
+    <div class="text-center">
+      <a routerLink="/" class="btn btn-outline-dark">Home</a>
+    </div>
+  </div>
+
+  <div class="container pay-page__inner py-4 py-md-5" *ngIf="!loading && order && !error">
+    <div class="row">
+      <div class="col-lg-7 mb-4 mb-lg-0">
+        <header class="pay-page__header mb-4">
+          <p class="pay-page__eyebrow">Secure payment</p>
+          <h1 class="pay-page__title">Pay for order {{ order.$key }}</h1>
+          <p class="text-muted small mb-0">
+            Your order is saved. Enter card details below to complete this step. Demo only — no real charge.
+          </p>
+        </header>
+        <div class="pay-security-strip mb-3" role="note" aria-label="Security badges">
+          <span><i class="fa fa-lock"></i> TLS encrypted</span>
+          <span><i class="fa fa-shield"></i> Tokenized card flow</span>
+          <span><i class="fa fa-check-circle"></i> 3D Secure ready</span>
+        </div>
+
+        <div class="pay-card card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="h6 font-weight-bold text-uppercase letter-spacing mb-3">Card details</h2>
+            <mat-form-field appearance="outline" class="pay-mat-field">
+              <mat-label>Name on card</mat-label>
+              <input
+                matInput
+                id="pc-name"
+                name="cardName"
+                [(ngModel)]="cardName"
+                (ngModelChange)="cardName = $event"
+                autocomplete="cc-name"
+                placeholder="As shown on card"
+              />
+              <mat-hint>Cardholder legal name</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="pay-mat-field">
+              <mat-label>Card number</mat-label>
+              <input
+                matInput
+                id="pc-num"
+                name="cardNumber"
+                [(ngModel)]="cardNumber"
+                (ngModelChange)="onCardNumberChange($event)"
+                inputmode="numeric"
+                autocomplete="cc-number"
+                placeholder="0000 0000 0000 0000"
+                maxlength="23"
+              />
+              <mat-hint>{{ cardBrand }}</mat-hint>
+              <mat-error *ngIf="cardNumber && cardNumberError">{{ cardNumberError }}</mat-error>
+            </mat-form-field>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <mat-form-field appearance="outline" class="pay-mat-field">
+                  <mat-label>Expiry</mat-label>
+                  <input
+                    matInput
+                    id="pc-exp"
+                    name="cardExpiry"
+                    [(ngModel)]="cardExpiry"
+                    (ngModelChange)="onExpiryChange($event)"
+                    autocomplete="cc-exp"
+                    placeholder="MM / YY"
+                  />
+                  <mat-error *ngIf="cardExpiry && expiryError">{{ expiryError }}</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="form-group col-md-6">
+                <mat-form-field appearance="outline" class="pay-mat-field">
+                  <mat-label>CVV</mat-label>
+                  <input
+                    matInput
+                    id="pc-cvv"
+                    name="cardCvv"
+                    [(ngModel)]="cardCvv"
+                    (ngModelChange)="onCvvChange($event)"
+                    inputmode="numeric"
+                    autocomplete="cc-csc"
+                    maxlength="4"
+                    placeholder="***"
+                  />
+                  <mat-hint>3 or 4 digits</mat-hint>
+                  <mat-error *ngIf="cardCvv && cvvError">{{ cvvError }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="alert alert-danger mb-0" *ngIf="payError">{{ payError }}</div>
+            <div class="d-flex flex-wrap align-items-center justify-content-between mt-4 pt-3 border-top">
+              <a routerLink="/my/orders" class="btn btn-link text-muted px-0">My orders</a>
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                class="pay-page__btn"
+                (click)="submitPayment()"
+                [disabled]="!formValid || processing"
+              >
+                <span *ngIf="!processing">Pay {{ order.total | shopCurrency }}</span>
+                <span *ngIf="processing">Authorizing secure payment…</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <aside class="pay-summary card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="h6 font-weight-bold mb-3">Order summary</h2>
+            <ul class="list-unstyled mb-0 pay-summary__lines">
+              <li *ngFor="let line of order.items" class="d-flex justify-content-between py-2 border-bottom">
+                <span class="pr-2">
+                  {{ line.quantity }} × {{ line.title }}
+                </span>
+                <span class="text-nowrap">{{ line.lineTotal | shopCurrency }}</span>
+              </li>
+            </ul>
+            <div class="d-flex justify-content-between pt-3 mt-2 font-weight-bold">
+              <span>Total due</span>
+              <span>{{ order.total | shopCurrency }}</span>
+            </div>
+            <p class="small text-muted mt-3 mb-0">
+              <i class="fa fa-lock mr-1" aria-hidden="true"></i>
+              Encrypted session (demo). For production, connect Stripe, Adyen, or your PSP.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>

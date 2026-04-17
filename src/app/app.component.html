@@ -1,0 +1,32 @@
+<bs-navbar></bs-navbar>
+
+<app-breadcrumbs></app-breadcrumbs>
+
+<div class="container app-shell">
+  <router-outlet></router-outlet>
+</div>
+
+<footer class="store-footer">
+  <div class="container store-footer__inner">
+    <div class="store-footer__brand">
+      <div class="store-footer__title">Watches Store</div>
+      <p class="store-footer__tagline">
+        Curated luxury timepieces inspired by world-class retail experiences.
+      </p>
+    </div>
+
+    <div class="store-footer__meta">
+      <a routerLink="/products">Collections</a>
+      <a routerLink="/my/orders">My Orders</a>
+      <a routerLink="/admin/marketplace">Marketplace</a>
+    </div>
+
+    <div class="store-footer__copy">
+      <span>Secure Checkout</span>
+      <span class="store-footer__dot"></span>
+      <span>Fast Shipping</span>
+      <span class="store-footer__dot"></span>
+      <span>&copy; {{ currentYear }} Watches Store</span>
+    </div>
+  </div>
+</footer>

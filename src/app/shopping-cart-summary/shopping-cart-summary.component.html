@@ -1,0 +1,35 @@
+<div class="checkout-summary-card card border-0 shadow-sm">
+  <div class="card-body">
+    <h4 class="checkout-summary-card__title mb-3">Order summary</h4>
+    <p class="text-muted small mb-3" *ngIf="!showBreakdown">
+      You have {{ cart.totalItemsCount }} item(s) in your cart.
+    </p>
+    <ul class="list-group list-group-flush checkout-summary-card__lines">
+      <li class="list-group-item px-0 d-flex justify-content-between align-items-start" *ngFor="let item of cart.items">
+        <span class="pr-2">
+          <span class="font-weight-medium">{{ item.quantity }} ×</span>
+          {{ item.title }}
+        </span>
+        <span class="text-nowrap">{{ item.totalPrice | shopCurrency }}</span>
+      </li>
+      <ng-container *ngIf="showBreakdown">
+        <li class="list-group-item px-0 d-flex justify-content-between border-top">
+          <span>Subtotal</span>
+          <span>{{ subtotalEur | shopCurrency }}</span>
+        </li>
+        <li class="list-group-item px-0 d-flex justify-content-between">
+          <span>Shipping</span>
+          <span>{{ shippingEur | shopCurrency }}</span>
+        </li>
+        <li class="list-group-item px-0 d-flex justify-content-between">
+          <span>{{ taxLabel }}</span>
+          <span>{{ taxEur | shopCurrency }}</span>
+        </li>
+      </ng-container>
+      <li class="list-group-item px-0 d-flex justify-content-between font-weight-bold checkout-summary-card__total">
+        <span>Total</span>
+        <span>{{ (showBreakdown ? totalEur : cart.totalPrice) | shopCurrency }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="admin-categories">
+  <p class="admin-categories__back">
+    <a routerLink="/admin/products">← Admin products</a>
+  </p>
+
+  <h1>Categories</h1>
+  <p class="text-muted">
+    Names appear in filters and product forms. Each category gets a stable key
+    <code>cat-…</code> derived from the name. Changing a name later does not update existing
+    products—edit those products if needed.
+  </p>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="h5 card-title">Add category</h2>
+      <div class="form-row align-items-end">
+        <div class="col-md-6">
+          <label for="newCatName">Display name</label>
+          <input
+            id="newCatName"
+            type="text"
+            class="form-control"
+            name="newCatName"
+            [(ngModel)]="newName"
+            (keyup.enter)="add()"
+            placeholder="e.g. Tudor"
+            maxlength="120"
+          />
+        </div>
+        <div class="col-md-6 mt-2 mt-md-0">
+          <button type="button" class="btn btn-primary" (click)="add()">Add</button>
+        </div>
+      </div>
+      <div class="alert alert-danger mt-2 mb-0" *ngIf="addError">{{ addError }}</div>
+    </div>
+  </div>
+
+  <table class="table table-striped" *ngIf="categories$ | async as cats">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Key</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of cats">
+        <td>{{ c.name }}</td>
+        <td><code>{{ c.$key }}</code></td>
+        <td class="text-right">
+          <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove(c)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

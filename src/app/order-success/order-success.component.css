@@ -1,0 +1,54 @@
+.order-success {
+  min-height: 55vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.order-success__inner {
+  max-width: 560px;
+}
+
+.order-success__card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 1.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+}
+
+.order-success__check {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #e8d5a3 0%, #c9a86c 55%, #a8864a 100%);
+  color: #14110d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+
+.order-success__title {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.order-success__lead {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.order-success__amount {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.order-success__actions .btn {
+  border-radius: 999px;
+  min-width: 180px;
+  font-weight: 700;
+}

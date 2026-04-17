@@ -1,0 +1,56 @@
+<p>
+  <a routerLink="/admin/products/new" class="btn btn-primary">New Product</a>
+  <a routerLink="/admin/products/bulk-upload" class="btn btn-outline-primary ml-2">Bulk Upload</a>
+  <a routerLink="/admin/categories" class="btn btn-outline-secondary ml-2">Categories</a>
+  <a routerLink="/admin/home-spotlight" class="btn btn-outline-secondary ml-2">Home slider</a>
+</p>
+<p>
+  <input
+    #query
+    (keyup)="filter(query.value)"
+    type="text"
+    class="form-control"
+    placeholder="Search..."
+  />
+</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Price</th>
+      <th>Model</th>
+      <th>Rating</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of filteredProducts">
+      <td>{{ item.title }}</td>
+      <td>
+        <ng-container *ngIf="item.discountPrice; else normalAdminPrice">
+          <div class="font-weight-bold">
+            {{ item.discountPrice | shopCurrency }}
+          </div>
+          <div class="text-muted text-decoration-line-through">
+            {{ item.price | shopCurrency }}
+          </div>
+        </ng-container>
+        <ng-template #normalAdminPrice>
+          {{ item.price | shopCurrency }}
+        </ng-template>
+      </td>
+      <td>
+        <ng-container *ngIf="item.modelNumber; else noModel">
+          {{ item.modelNumber }}
+        </ng-container>
+        <ng-template #noModel>—</ng-template>
+      </td>
+      <td>
+        <ng-container *ngIf="item.rating != null">
+          {{ item.rating | number : "1.1-1" }} ({{ item.ratingCount }})
+        </ng-container>
+      </td>
+      <td><a [routerLink]="['/admin/products/', item.$key]">Edit</a></td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,29 @@
+.checkout-summary-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+.checkout-summary-card__title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.checkout-summary-card__lines .list-group-item {
+  background: transparent;
+  border-color: rgba(15, 23, 42, 0.06);
+}
+
+.checkout-summary-card__total {
+  font-size: 1.05rem;
+  padding-top: 0.75rem !important;
+  margin-top: 0.25rem;
+  border-top: 2px solid rgba(15, 23, 42, 0.1) !important;
+}
+
+.font-weight-medium {
+  font-weight: 600;
+}

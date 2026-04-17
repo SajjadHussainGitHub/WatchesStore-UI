@@ -1,0 +1,337 @@
+<div class="mp-page">
+  <div class="mp-header">
+    <div>
+      <h2 class="mp-title">Marketplace Publishing</h2>
+      <p class="mp-subtitle">
+        Admin-only dashboard to publish your Watches catalog to free marketplace
+        data connectors (DummyJSON / FakeStore)
+        (export feed + publish history).
+      </p>
+    </div>
+
+    <div class="mp-actions">
+      <div class="mp-kpis">
+        <div class="mp-kpi">
+          <div class="mp-kpi__value">{{ products.length }}</div>
+          <div class="mp-kpi__label">Products</div>
+        </div>
+        <div class="mp-kpi">
+          <div class="mp-kpi__value">
+            {{ listings.length }}
+          </div>
+          <div class="mp-kpi__label">Publish events</div>
+        </div>
+        <div class="mp-kpi">
+          <div class="mp-kpi__value">{{ getPublishedCount() }}</div>
+          <div class="mp-kpi__label">Successful publishes</div>
+        </div>
+        <div class="mp-kpi">
+          <div class="mp-kpi__value">{{ getEstimatedReachTotal() | number }}</div>
+          <div class="mp-kpi__label">Estimated reach</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mp-card">
+    <div class="card-body">
+      <div class="mp-section mb-4">
+        <div class="mp-section__title">External marketplace search and import</div>
+        <p class="mp-hint mb-2">
+          Search by product keyword or model number, review results from selected channels,
+          then import directly into your catalog.
+        </p>
+        <div class="row">
+          <div class="col-12 col-lg-4">
+            <label class="mb-1">Keyword / Model #</label>
+            <input
+              class="form-control"
+              [(ngModel)]="importQuery"
+              placeholder="e.g. Submariner or RX-SUB-001"
+            />
+          </div>
+          <div class="col-12 col-lg-4 mt-2 mt-lg-0">
+            <label class="mb-1">Channels</label>
+            <div class="mp-checklist">
+              <label *ngFor="let c of channels" class="mp-checklist__item">
+                <input
+                  type="checkbox"
+                  [checked]="isImportChannelSelected(c)"
+                  (change)="toggleImportChannel(c, $event.target.checked)"
+                />
+                <span>{{ c }}</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4 mt-2 mt-lg-0 d-flex align-items-end">
+            <button
+              type="button"
+              class="btn btn-dark btn-block"
+              (click)="searchExternalProducts()"
+              [disabled]="importLoading"
+            >
+              <span *ngIf="!importLoading">Search marketplaces</span>
+              <span *ngIf="importLoading">Searching…</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="externalError" class="alert alert-danger mt-3 mb-0">{{ externalError }}</div>
+        <div *ngIf="importMessage" class="alert alert-success mt-3 mb-0">{{ importMessage }}</div>
+
+        <div class="table-responsive mt-3" *ngIf="externalResults.length">
+          <table class="table table-sm table-hover mp-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Title</th>
+                <th>Model</th>
+                <th>Category</th>
+                <th class="text-right">Price</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of externalResults">
+                <td>{{ x.channel }}</td>
+                <td>{{ x.title }}</td>
+                <td><code>{{ x.modelNumber }}</code></td>
+                <td>{{ x.categoryName }}</td>
+                <td class="text-right">{{ x.price | shopCurrency }}</td>
+                <td class="text-right">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="importExternalProduct(x)"
+                    [disabled]="importingExternalIds.has(x.externalId)"
+                  >
+                    <span *ngIf="!importingExternalIds.has(x.externalId)">Import</span>
+                    <span *ngIf="importingExternalIds.has(x.externalId)">Importing…</span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <hr class="mp-divider mt-2 mb-4" />
+
+      <div class="row mp-row">
+        <div class="col-12 col-lg-4">
+          <div class="mp-section">
+            <div class="mp-section__title">Channel</div>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button
+                *ngFor="let c of channels"
+                type="button"
+                class="btn"
+                [ngClass]="{
+                  'btn-primary': selectedChannel === c,
+                  'btn-outline-primary': selectedChannel !== c
+                }"
+                (click)="selectedChannel = c"
+              >
+                {{ c }}
+              </button>
+            </div>
+
+            <hr class="mp-divider" />
+
+            <div class="mp-section__title">Market profile</div>
+            <div class="form-group">
+              <label class="mb-1">Region</label>
+              <select class="form-control" [(ngModel)]="selectedRegion">
+                <option *ngFor="let r of regions" [value]="r">{{ r }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="mb-1">Pricing strategy</label>
+              <select class="form-control" [(ngModel)]="selectedPricingMode">
+                <option *ngFor="let m of pricingModes" [value]="m.id">
+                  {{ m.label }} — {{ m.hint }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="mb-1">Shipping profile</label>
+              <select class="form-control" [(ngModel)]="selectedShippingProfile">
+                <option *ngFor="let s of shippingProfiles" [value]="s.id">
+                  {{ s.id }} — {{ s.hint }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="mb-1">Inventory buffer (%)</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="inventoryBufferPercent"
+                min="0"
+                max="40"
+              />
+            </div>
+            <div class="form-group">
+              <label class="mb-1">Quality checks</label>
+              <div class="mp-checklist">
+                <label *ngFor="let check of qualityCheckOptions" class="mp-checklist__item">
+                  <input
+                    type="checkbox"
+                    [checked]="isQualityCheckEnabled(check)"
+                    (change)="toggleQualityCheck(check, $event.target.checked)"
+                  />
+                  <span>{{ check }}</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group mb-2">
+              <label class="mb-1">Admin note (optional)</label>
+              <textarea
+                class="form-control"
+                rows="2"
+                [(ngModel)]="adminNote"
+                placeholder="Campaign intent, promo dates, compliance note…"
+              ></textarea>
+            </div>
+
+            <hr class="mp-divider" />
+
+            <div class="mp-section__title">Search products</div>
+            <input
+              class="form-control"
+              [(ngModel)]="query"
+              (ngModelChange)="filterProducts()"
+              placeholder="Search by title..."
+            />
+
+            <div class="mp-selection">
+              <div class="mp-selection__meta">
+                Selected:
+                <strong>{{ getSelectedCount() }}</strong>
+              </div>
+
+              <button
+                class="btn btn-outline-danger btn-sm"
+                type="button"
+                (click)="resetSelection()"
+                [disabled]="!selectedProductIds.length || publishLoading"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-dark btn-block mt-3"
+              (click)="publishSelected()"
+              [disabled]="publishLoading || !selectedProductIds.length"
+            >
+              <span *ngIf="!publishLoading">Publish to {{ selectedChannel }}</span>
+              <span *ngIf="publishLoading">Publishing...</span>
+            </button>
+
+            <div class="mp-hint mt-3">
+              Publishing is simulated locally. Use “Download feed” from history
+              to export the JSON payload for your connector integration.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+          <div class="mp-section">
+            <div class="mp-section__title">Products</div>
+            <div class="mp-product-list">
+              <div
+                *ngFor="let p of filteredProducts"
+                class="mp-product-row"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(p.$key)"
+                  (change)="toggleProduct(p.$key, $event.target.checked)"
+                />
+
+                <img
+                  class="mp-thumb"
+                  [src]="p.imageUrl"
+                  [alt]="p.title"
+                />
+
+                <div class="mp-product-meta">
+                  <div class="mp-product-title">{{ p.title }}</div>
+                  <div class="mp-product-sub">
+                    <span *ngIf="p.modelNumber">{{ p.modelNumber }}</span>
+                    <span *ngIf="p.modelNumber"> · </span>
+                    {{ p.category }}
+                  </div>
+                </div>
+
+                <div class="mp-product-price">
+                  {{ p.price | shopCurrency }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="mp-divider mt-4" />
+
+      <div class="mp-section">
+        <div class="mp-section__title">Publish history</div>
+
+        <div class="table-responsive">
+          <table class="table table-hover mp-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Products</th>
+                <th>Region</th>
+                <th>Feed ver.</th>
+                <th>Status</th>
+                <th>Published at</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let l of listings">
+                <td>{{ l.channel }}</td>
+                <td>{{ l.productIds.length }}</td>
+                <td>{{ l.region }}</td>
+                <td><code>{{ l.feedVersion }}</code></td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'badge-success': l.status === 'Published',
+                    'badge-secondary': l.status !== 'Published'
+                  }"
+                    >{{ l.status }}</span
+                  >
+                </td>
+                <td>{{ l.publishedAt || l.createdAt }}</td>
+                <td class="text-right">
+                  <button
+                    type="button"
+                    class="btn btn-outline-dark btn-sm"
+                    (click)="downloadPublishedFeedFromListing(l)"
+                  >
+                    Download feed
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="!listings?.length">
+                <td colspan="7" class="text-muted text-center">
+                  No publish events yet.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

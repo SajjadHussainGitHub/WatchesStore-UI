@@ -1,0 +1,11 @@
+.admin-categories {
+  max-width: 960px;
+}
+
+.admin-categories__back {
+  margin-bottom: 1rem;
+}
+
+.admin-categories__back a {
+  color: #495057;
+}

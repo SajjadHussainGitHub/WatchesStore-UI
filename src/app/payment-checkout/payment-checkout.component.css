@@ -1,0 +1,83 @@
+.pay-page {
+  min-height: 60vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.pay-page__inner {
+  max-width: 1100px;
+}
+
+.pay-page__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+}
+
+.pay-page__title {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.pay-security-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pay-security-strip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+}
+
+.pay-security-strip .fa {
+  color: #c9a86c;
+}
+
+.pay-card {
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.pay-mat-field {
+  width: 100%;
+}
+
+.pay-page__btn {
+  border-radius: 999px;
+  font-weight: 700;
+  padding: 0.65rem 1.75rem;
+  min-width: 200px;
+}
+
+.pay-summary {
+  border-radius: 16px;
+  position: sticky;
+  top: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.pay-summary__lines {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.letter-spacing {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #64748b;
+}

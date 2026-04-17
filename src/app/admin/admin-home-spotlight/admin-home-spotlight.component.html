@@ -1,0 +1,104 @@
+<div class="admin-spotlight">
+  <p class="admin-spotlight__back">
+    <a routerLink="/admin/products">← Admin products</a>
+  </p>
+
+  <h1>Home slider — new arrivals</h1>
+  <p class="text-muted">
+    Choose which products appear in the <strong>New arrivals &amp; brands</strong> carousel on the
+    home page. Order matters (first = earlier in the carousel). Removing all rows restores the
+    automatic mix of featured brands and newest products.
+  </p>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="h5 card-title">Add product</h2>
+      <div class="form-row align-items-end">
+        <div class="col-md-8">
+          <label for="spotlightPick">Product</label>
+          <select
+            id="spotlightPick"
+            class="form-control"
+            name="spotlightPick"
+            [(ngModel)]="selectedProductId"
+          >
+            <option value="">— Select a product —</option>
+            <ng-container *ngIf="vm$ | async as vm">
+              <option *ngFor="let p of vm.available" [value]="p.$key">
+                {{ p.title }} ({{ p.$key }})
+              </option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="col-md-4 mt-2 mt-md-0">
+          <button type="button" class="btn btn-primary" (click)="add()">Add to slider</button>
+        </div>
+      </div>
+      <div class="alert alert-danger mt-2 mb-0" *ngIf="addError">{{ addError }}</div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <p class="text-muted small mb-2">
+      {{ vm.count }} / {{ vm.max }} products in the curated slider.
+    </p>
+
+    <table class="table table-striped" *ngIf="vm.rows.length; else emptySpotlight">
+      <thead>
+        <tr>
+          <th style="width: 3rem">#</th>
+          <th>Product</th>
+          <th>Key</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of vm.rows; let i = index" [class.table-warning]="row.missing">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <ng-container *ngIf="row.product as p; else missingTitle">
+              {{ p.title }}
+            </ng-container>
+            <ng-template #missingTitle>
+              <span class="text-danger">Missing product (remove this row)</span>
+            </ng-template>
+          </td>
+          <td><code>{{ row.id }}</code></td>
+          <td class="text-right text-nowrap">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary mr-1"
+              (click)="moveUp(i)"
+              [disabled]="i === 0"
+              title="Move up"
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary mr-1"
+              (click)="moveDown(i)"
+              [disabled]="i === vm.rows.length - 1"
+              title="Move down"
+            >
+              ↓
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAt(i)">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #emptySpotlight>
+      <p class="text-muted">No curated products — the home page uses the automatic carousel.</p>
+    </ng-template>
+
+    <p *ngIf="vm.rows.length">
+      <button type="button" class="btn btn-outline-secondary" (click)="clear()">
+        Clear all &amp; use automatic carousel
+      </button>
+    </p>
+  </ng-container>
+</div>

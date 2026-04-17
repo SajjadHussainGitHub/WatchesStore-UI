@@ -1,0 +1,89 @@
+<div class="container py-4 bulk">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+    <div>
+      <h2 class="mb-1">Bulk Product Upload</h2>
+      <p class="text-muted mb-0">
+        Upload an Excel sheet (.xlsx) to create many products at once.
+      </p>
+    </div>
+    <a routerLink="/admin/products" class="btn btn-outline-secondary mt-2 mt-md-0"
+      >Back to products</a
+    >
+  </div>
+
+  <div class="card bulk-card mb-3">
+    <div class="card-body">
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+        <button type="button" class="btn btn-dark mr-2" (click)="downloadDemoTemplate()">
+          Download demo template
+        </button>
+        <small class="text-muted"
+          >Required columns: <code>title</code>, <code>price</code>, <code>category</code></small
+        >
+      </div>
+
+      <div class="form-group mb-2">
+        <label class="font-weight-bold mb-1">Upload Excel file</label>
+        <input
+          type="file"
+          class="form-control-file"
+          accept=".xlsx,.xls"
+          (change)="onFileSelected($event)"
+        />
+        <small class="text-muted" *ngIf="fileName">Selected: {{ fileName }}</small>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger mb-2">{{ errorMessage }}</div>
+      <div *ngIf="resultMessage" class="alert alert-success mb-2">{{ resultMessage }}</div>
+    </div>
+  </div>
+
+  <div class="card bulk-card" *ngIf="rows.length">
+    <div class="card-body">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+        <div>
+          <strong>{{ rows.length }}</strong> rows parsed,
+          <strong>{{ validCount }}</strong> valid
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="importRows()"
+          [disabled]="importing || validCount !== rows.length"
+        >
+          <span *ngIf="!importing">Import valid rows</span>
+          <span *ngIf="importing">Importing…</span>
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr>
+              <th>Row</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Category input</th>
+              <th>Resolved key</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of rows" [class.table-danger]="r.errors.length">
+              <td>{{ r.rowNumber }}</td>
+              <td>{{ r.title || '—' }}</td>
+              <td>{{ r.price || '—' }}</td>
+              <td>{{ r.categoryInput || '—' }}</td>
+              <td><code>{{ r.categoryResolved || '—' }}</code></td>
+              <td>
+                <span *ngIf="!r.errors.length" class="badge badge-success">Valid</span>
+                <span *ngIf="r.errors.length" class="badge badge-danger">{{ r.errors.join(', ') }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
