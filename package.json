@@ -1,6 +1,19 @@
 {
   "name": "watches-store",
   "version": "0.0.0",
+  "description": "World-class Angular watches ecommerce storefront with admin, marketplace connectors, checkout, and payment flow.",
+  "keywords": [
+    "watches-store",
+    "watch-store",
+    "angular-ecommerce",
+    "luxury-watches",
+    "online-watch-shop",
+    "shopping-cart",
+    "checkout",
+    "payment-gateway",
+    "admin-dashboard",
+    "marketplace-integration"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

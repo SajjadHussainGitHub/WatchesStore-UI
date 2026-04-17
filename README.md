@@ -1,5 +1,22 @@
 # WatchesStore-UI
 
+WatchesStore-UI is a world-class Angular ecommerce project for luxury watches with customer and admin experiences, secure checkout, and marketplace import connectors.
+
+## Keywords
+
+`watches store`, `luxury watches`, `angular ecommerce`, `online watch shop`, `watch marketplace`,
+`shopping cart`, `secure checkout`, `payment gateway`, `admin product management`,
+`new arrivals slider`, `multi-currency store`, `bulk product upload`, `marketplace scraper`,
+`DummyJSON`, `FakeStore API`
+
+## Features
+
+- Luxury storefront UI with responsive navbar, breadcrumb, and premium footer.
+- Product catalog, product detail pages, cart, and order management.
+- Multi-step shipping and checkout flow with payment checkout simulation.
+- Admin modules for products, categories, orders, spotlight/new arrivals, and marketplace import.
+- Bulk product upload support via Excel (`xlsx`) and demo login accounts for testing.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
 
 ## Development server
