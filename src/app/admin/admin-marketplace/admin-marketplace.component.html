@@ -36,6 +36,86 @@
   <div class="card mp-card">
     <div class="card-body">
       <div class="mp-section mb-4">
+        <div class="mp-section__title">Auto Sync Inventory</div>
+        <p class="mp-hint mb-2">
+          Pull live stock signals from free connectors and auto-update catalog inventory.
+        </p>
+        <div class="row">
+          <div class="col-12 col-lg-3">
+            <label class="mb-1">Auto sync</label>
+            <select class="form-control" [(ngModel)]="syncSettings.enabled">
+              <option [ngValue]="true">Enabled</option>
+              <option [ngValue]="false">Disabled</option>
+            </select>
+          </div>
+          <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+            <label class="mb-1">Interval (minutes)</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="syncSettings.intervalMinutes"
+              min="1"
+              max="360"
+            />
+          </div>
+          <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+            <label class="mb-1">Buffer (%)</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="syncSettings.inventoryBufferPercent"
+              min="0"
+              max="40"
+            />
+          </div>
+          <div class="col-12 col-lg-3 mt-2 mt-lg-0">
+            <label class="mb-1">Channels</label>
+            <div class="mp-checklist">
+              <label *ngFor="let c of channels" class="mp-checklist__item">
+                <input
+                  type="checkbox"
+                  [checked]="isInventorySyncChannelSelected(c)"
+                  (change)="toggleInventorySyncChannel(c, $event.target.checked)"
+                />
+                <span>{{ c }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="mp-sync-actions mt-3">
+          <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="saveInventorySyncSettings()"
+          >
+            Save auto-sync settings
+          </button>
+          <button
+            type="button"
+            class="btn btn-dark"
+            (click)="runInventorySyncNow()"
+            [disabled]="inventorySyncLoading"
+          >
+            <span *ngIf="!inventorySyncLoading">Sync now</span>
+            <span *ngIf="inventorySyncLoading">Syncing…</span>
+          </button>
+        </div>
+        <div *ngIf="inventorySyncError" class="alert alert-danger mt-3 mb-0">
+          {{ inventorySyncError }}
+        </div>
+        <div *ngIf="inventorySyncMessage" class="alert alert-success mt-3 mb-0">
+          {{ inventorySyncMessage }}
+        </div>
+        <div class="mp-hint mt-2" *ngIf="lastInventorySync">
+          Last run: {{ lastInventorySync.syncedAt }} |
+          matched {{ lastInventorySync.matched }}/{{ lastInventorySync.scanned }} |
+          updated {{ lastInventorySync.updated }}
+        </div>
+      </div>
+
+      <hr class="mp-divider mt-2 mb-4" />
+
+      <div class="mp-section mb-4">
         <div class="mp-section__title">External marketplace search and import</div>
         <p class="mp-hint mb-2">
           Search by product keyword or model number, review results from selected channels,
@@ -266,7 +346,7 @@
                   <div class="mp-product-sub">
                     <span *ngIf="p.modelNumber">{{ p.modelNumber }}</span>
                     <span *ngIf="p.modelNumber"> · </span>
-                    {{ p.category }}
+                    {{ p.category }} · Stock: {{ p.inventoryQty ?? 0 }}
                   </div>
                 </div>
 

@@ -76,6 +76,12 @@
   margin-top: 1rem;
 }
 
+.mp-sync-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
 .mp-selection__meta {
   color: #0f172a;
   font-weight: 700;

@@ -48,6 +48,7 @@ import { CurrencyService } from './services/currency/currency.service';
 import { ShopCurrencyPipe } from './pipes/shop-currency.pipe';
 import { HomeSpotlightService } from './services/home-spotlight/home-spotlight.service';
 import { ShippingService } from './services/shipping/shipping.service';
+import { InventorySyncService } from './services/inventory-sync/inventory-sync.service';
 
 @NgModule({
   declarations: [
@@ -192,6 +193,7 @@ import { ShippingService } from './services/shipping/shipping.service';
     ShoppingCartService,
     OrderService,
     MarketplaceService,
+    InventorySyncService,
     CurrencyService,
   ],
   bootstrap: [AppComponent],
