@@ -5,6 +5,10 @@ export interface Product {
   $key: string;
   title: string;
   price: string;
+  /** Current available units in local inventory snapshot. */
+  inventoryQty?: number;
+  /** ISO timestamp of the latest inventory sync update. */
+  lastInventorySyncAt?: string;
   modelNumber?: string;
   // Customer-facing rating (0-5) + number of reviews
   rating?: number;

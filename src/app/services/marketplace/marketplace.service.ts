@@ -51,6 +51,13 @@ export interface MarketplaceExternalProduct {
   discountPercent?: number;
 }
 
+export interface MarketplaceInventorySignal {
+  channel: MarketplaceChannel;
+  modelNumber: string;
+  title: string;
+  stock: number;
+}
+
 @Injectable()
 export class MarketplaceService {
   private readonly storageKey = 'eshop.marketplace.listings';
@@ -88,6 +95,26 @@ export class MarketplaceService {
       .filter((s): s is PromiseFulfilledResult<MarketplaceExternalProduct[]> => s.status === 'fulfilled')
       .flatMap((s) => s.value);
     return merged.slice(0, 50);
+  }
+
+  /**
+   * Pulls inventory signals from external connectors for local stock sync.
+   */
+  async fetchInventorySignals(
+    channels: MarketplaceChannel[],
+  ): Promise<MarketplaceInventorySignal[]> {
+    const requested = new Set(channels);
+    const tasks: Promise<MarketplaceInventorySignal[]>[] = [];
+    if (requested.has('DummyJSON')) {
+      tasks.push(this.fetchInventorySignalsFromDummyJson());
+    }
+    if (requested.has('FakeStore')) {
+      tasks.push(this.fetchInventorySignalsFromFakeStore());
+    }
+    const settled = await Promise.allSettled(tasks);
+    return settled
+      .filter((s): s is PromiseFulfilledResult<MarketplaceInventorySignal[]> => s.status === 'fulfilled')
+      .flatMap((s) => s.value);
   }
 
   /**
@@ -228,6 +255,43 @@ export class MarketplaceService {
         rating: Number.isFinite(Number(p.rating?.rate)) ? Number(p.rating?.rate) : 4,
         ratingCount: Number.isFinite(Number(p.rating?.count)) ? Number(p.rating?.count) : 80,
       }));
+  }
+
+  private async fetchInventorySignalsFromDummyJson(): Promise<MarketplaceInventorySignal[]> {
+    const response = await fetch('https://dummyjson.com/products?limit=100');
+    if (!response.ok) return [];
+    const json = (await response.json()) as {
+      products?: Array<{
+        id: number;
+        title: string;
+        stock?: number;
+      }>;
+    };
+    const list = Array.isArray(json.products) ? json.products : [];
+    return list.map((p) => ({
+      channel: 'DummyJSON',
+      modelNumber: `DJ-${p.id}`,
+      title: p.title,
+      stock: Math.max(0, Math.floor(Number(p.stock) || 0)),
+    }));
+  }
+
+  private async fetchInventorySignalsFromFakeStore(): Promise<MarketplaceInventorySignal[]> {
+    const response = await fetch('https://fakestoreapi.com/products');
+    if (!response.ok) return [];
+    const list = (await response.json()) as Array<{
+      id: number;
+      title: string;
+      rating?: { count?: number };
+    }>;
+    if (!Array.isArray(list)) return [];
+    return list.map((p) => ({
+      channel: 'FakeStore',
+      modelNumber: `FS-${p.id}`,
+      title: p.title,
+      // FakeStore has no stock; derive a stable estimate from popularity count.
+      stock: Math.max(0, Math.floor(Number(p.rating?.count) || 0)),
+    }));
   }
 
   private toTitleCase(text: string): string {

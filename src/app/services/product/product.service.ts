@@ -103,6 +103,9 @@ export class ProductService {
         this.hashToInt(newProduct.$key),
       );
     }
+    if (!Number.isFinite(Number(newProduct.inventoryQty))) {
+      newProduct.inventoryQty = this.defaultInventoryForSeed(this.hashToInt(newProduct.$key));
+    }
     products.push(newProduct);
     this.writeProducts(products);
     return Promise.resolve({ key: newProduct.$key });
@@ -139,6 +142,50 @@ export class ProductService {
     );
     this.writeProducts(products);
     return Promise.resolve();
+  }
+
+  /**
+   * Applies inventory quantities in a single local write.
+   */
+  updateInventoryBulk(
+    updates: Array<{ productId: string; inventoryQty: number; syncedAt: string }>,
+  ): { updated: number } {
+    if (!updates?.length) {
+      return { updated: 0 };
+    }
+    const map = new Map(
+      updates.map((u) => [
+        u.productId,
+        {
+          qty: Math.max(0, Math.floor(Number(u.inventoryQty) || 0)),
+          syncedAt: u.syncedAt,
+        },
+      ]),
+    );
+    let changed = 0;
+    const products = this.readProducts().map((p) => {
+      const hit = map.get(p.$key);
+      if (!hit) {
+        return p;
+      }
+      const nextQty = hit.qty;
+      const prevQty = Number.isFinite(Number(p.inventoryQty))
+        ? Number(p.inventoryQty)
+        : -1;
+      if (prevQty === nextQty && p.lastInventorySyncAt === hit.syncedAt) {
+        return p;
+      }
+      changed++;
+      return {
+        ...p,
+        inventoryQty: nextQty,
+        lastInventorySyncAt: hit.syncedAt,
+      };
+    });
+    if (changed > 0) {
+      this.writeProducts(products);
+    }
+    return { updated: changed };
   }
 
   /**
@@ -353,6 +400,7 @@ export class ProductService {
           $key: productKey,
           title: baseLabel,
           price: basePrice.toFixed(2),
+          inventoryQty: this.defaultInventoryForSeed(seed),
           modelNumber: modelNo,
           discountPrice: discountPrice.toFixed(2),
           discountPercent,
@@ -400,6 +448,9 @@ export class ProductService {
     if (migrated.rating == null || migrated.ratingCount == null) {
       migrated.rating = Number((3.6 + ((seed % 14) / 14) * 1.4).toFixed(1));
       migrated.ratingCount = 120 + (seed % 830);
+    }
+    if (!Number.isFinite(Number(migrated.inventoryQty))) {
+      migrated.inventoryQty = this.defaultInventoryForSeed(seed);
     }
 
     // Ensure discounts
@@ -618,5 +669,10 @@ export class ProductService {
       hash = (hash * 31 + input.charCodeAt(i)) | 0;
     }
     return hash;
+  }
+
+  private defaultInventoryForSeed(seed: number): number {
+    const positive = Math.abs(seed);
+    return 8 + (positive % 53);
   }
 }

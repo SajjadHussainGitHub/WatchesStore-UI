@@ -13,6 +13,11 @@ import {
   MarketplaceService,
 } from '../../services/marketplace/marketplace.service';
 import { CategoryService } from '../../services/category/category.service';
+import {
+  InventorySyncResult,
+  InventorySyncService,
+  InventorySyncSettings,
+} from '../../services/inventory-sync/inventory-sync.service';
 
 type PublishError = { message: string };
 
@@ -65,15 +70,27 @@ export class AdminMarketplaceComponent implements OnInit, OnDestroy {
   externalError = '';
   selectedImportChannels: MarketplaceChannel[] = ['DummyJSON', 'FakeStore'];
   importingExternalIds = new Set<string>();
+  syncSettings: InventorySyncSettings = {
+    enabled: false,
+    intervalMinutes: 30,
+    channels: ['DummyJSON', 'FakeStore'],
+    inventoryBufferPercent: 8,
+  };
+  inventorySyncLoading = false;
+  inventorySyncMessage = '';
+  inventorySyncError = '';
+  lastInventorySync: InventorySyncResult | null = null;
 
   listings: MarketplaceListing[] = [];
   private sub?: Subscription;
   private listingsSub?: Subscription;
+  private syncSettingsSub?: Subscription;
 
   constructor(
     private productService: ProductService,
     private marketplaceService: MarketplaceService,
     private categoryService: CategoryService,
+    private inventorySyncService: InventorySyncService,
   ) {}
 
   ngOnInit(): void {
@@ -85,11 +102,16 @@ export class AdminMarketplaceComponent implements OnInit, OnDestroy {
     this.listingsSub = this.marketplaceService.getListings().subscribe((listings) => {
       this.listings = listings;
     });
+    this.syncSettingsSub = this.inventorySyncService
+      .getSettings()
+      .subscribe((settings) => (this.syncSettings = { ...settings }));
+    this.lastInventorySync = this.inventorySyncService.readLastResult();
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.listingsSub?.unsubscribe();
+    this.syncSettingsSub?.unsubscribe();
   }
 
   toggleProduct(productId: string, checked: boolean) {
@@ -174,6 +196,50 @@ export class AdminMarketplaceComponent implements OnInit, OnDestroy {
     this.selectedImportChannels = checked
       ? [...new Set([...this.selectedImportChannels, channel])]
       : this.selectedImportChannels.filter((c) => c !== channel);
+  }
+
+  async runInventorySyncNow() {
+    this.inventorySyncLoading = true;
+    this.inventorySyncError = '';
+    this.inventorySyncMessage = '';
+    try {
+      const result = await this.inventorySyncService.runSyncNow({
+        channels: this.syncSettings.channels,
+        inventoryBufferPercent: this.syncSettings.inventoryBufferPercent,
+      });
+      this.lastInventorySync = result;
+      this.inventorySyncMessage =
+        `Inventory sync completed. Matched ${result.matched}/${result.scanned}, ` +
+        `updated ${result.updated} products.`;
+    } catch {
+      this.inventorySyncError =
+        'Inventory sync failed. Check marketplace connectors and try again.';
+    } finally {
+      this.inventorySyncLoading = false;
+    }
+  }
+
+  saveInventorySyncSettings() {
+    this.syncSettings = this.inventorySyncService.updateSettings(this.syncSettings);
+    this.inventorySyncMessage = this.syncSettings.enabled
+      ? `Auto sync enabled every ${this.syncSettings.intervalMinutes} minutes.`
+      : 'Auto sync disabled.';
+    this.inventorySyncError = '';
+  }
+
+  toggleInventorySyncChannel(channel: MarketplaceChannel, checked: boolean) {
+    const next = checked
+      ? [...new Set([...this.syncSettings.channels, channel])]
+      : this.syncSettings.channels.filter((c) => c !== channel);
+    const fallbackChannel = this.channels.find((c) => c !== channel) || this.channels[0];
+    this.syncSettings = {
+      ...this.syncSettings,
+      channels: next.length ? next : [fallbackChannel],
+    };
+  }
+
+  isInventorySyncChannelSelected(channel: MarketplaceChannel): boolean {
+    return this.syncSettings.channels.includes(channel);
   }
 
   async searchExternalProducts() {
