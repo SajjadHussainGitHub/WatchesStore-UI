@@ -6,6 +6,10 @@ import { AuthService } from '../services/auth/auth.service';
 import { ShoppingCart } from '../interfaces/shopping-cart';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CurrencyService, ShopCurrencyCode } from '../services/currency/currency.service';
+import {
+  UiLanguageCode,
+  UiLanguageService,
+} from '../services/ui-language/ui-language.service';
 
 @Component({
   selector: 'bs-navbar',
@@ -16,6 +20,13 @@ export class BsNavbarComponent implements OnInit {
   appUser: AppUser;
   cart$: Observable<ShoppingCart>;
   searchKeyword = '';
+  readonly languages: Array<{ code: UiLanguageCode; labelKey: string }> = [
+    { code: 'en', labelKey: 'LANG.ENGLISH' },
+    { code: 'ar', labelKey: 'LANG.ARABIC' },
+    { code: 'fr', labelKey: 'LANG.FRENCH' },
+    { code: 'de', labelKey: 'LANG.GERMAN' },
+  ];
+  selectedLanguage: UiLanguageCode = 'en';
 
   constructor(
     private authService: AuthService,
@@ -23,11 +34,13 @@ export class BsNavbarComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     readonly currencyService: CurrencyService,
+    private uiLanguage: UiLanguageService,
   ) {}
 
   async ngOnInit() {
     this.authService.appUser$.subscribe((appUser) => (this.appUser = appUser));
     this.cart$ = await this.shoppingCartService.getCart();
+    this.selectedLanguage = this.uiLanguage.init();
   }
 
   logout() {
@@ -55,5 +68,10 @@ export class BsNavbarComponent implements OnInit {
 
   selectCurrency(code: ShopCurrencyCode) {
     this.currencyService.setCurrency(code);
+  }
+
+  selectLanguage(code: UiLanguageCode) {
+    this.selectedLanguage = code;
+    this.uiLanguage.setLanguage(code);
   }
 }

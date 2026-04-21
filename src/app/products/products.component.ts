@@ -34,7 +34,7 @@ export class ProductsComponent implements OnInit {
       .getAll()
       .pipe(
         switchMap((products) => {
-          this.products = products;
+          this.products = products.filter((p) => this.isWatchProduct(p));
           return this.route.queryParamMap;
         }),
       )
@@ -68,5 +68,11 @@ export class ProductsComponent implements OnInit {
         brand.includes(keyword)
       );
     });
+  }
+
+  private isWatchProduct(p: Product): boolean {
+    const title = (p?.title || '').toLowerCase();
+    const category = (p?.category || '').toLowerCase();
+    return title.includes('watch') || category.includes('watch') || category.startsWith('cat-');
   }
 }

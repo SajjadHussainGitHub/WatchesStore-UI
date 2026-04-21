@@ -1,7 +1,7 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export type ShopCurrencyCode = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY';
+export type ShopCurrencyCode = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'JPY' | 'AED';
 
 export interface CurrencyOption {
   code: ShopCurrencyCode;
@@ -23,6 +23,7 @@ export class CurrencyService {
     GBP: 0.857,
     CHF: 0.955,
     JPY: 163.5,
+    AED: 3.99,
   };
 
   private readonly subject = new BehaviorSubject<ShopCurrencyCode>(this.readInitial());
@@ -35,6 +36,7 @@ export class CurrencyService {
     { code: 'GBP', label: 'GBP · Pound sterling' },
     { code: 'CHF', label: 'CHF · Swiss franc' },
     { code: 'JPY', label: 'JPY · Japanese yen' },
+    { code: 'AED', label: 'AED · UAE dirham' },
   ];
 
   constructor(private appRef: ApplicationRef) {}
@@ -63,6 +65,6 @@ export class CurrencyService {
     if (raw && raw in this.rates) {
       return raw as ShopCurrencyCode;
     }
-    return 'EUR';
+    return 'AED';
   }
 }

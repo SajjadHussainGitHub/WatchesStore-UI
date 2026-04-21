@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   highlightSlides: HomeHighlightSlide[] = [];
   /** True when admin curated list is driving the carousel (not the automatic mix). */
   curatedSpotlight = false;
+  newsletterEmail = '';
+  newsletterFeedback: { type: 'success' | 'error'; text: string } | null = null;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -43,10 +45,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.categoryService.getCategories(),
         this.homeSpotlight.spotlightIds$,
       ]).subscribe(([products, categories, spotlightIds]) => {
-        this.featuredProducts = products.slice(0, 8);
-        this.trendingProducts = products.slice(8, 16);
+        const watchProducts = products.filter((p) => this.isWatchProduct(p));
+        this.featuredProducts = watchProducts.slice(0, 8);
+        this.trendingProducts = watchProducts.slice(8, 16);
         this.featuredCategories = categories.slice(0, 6);
-        this.applyHighlightSlides(products, categories, spotlightIds);
+        this.applyHighlightSlides(watchProducts, categories, spotlightIds);
       }),
     );
   }
@@ -79,12 +82,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     products: Product[],
     categories: { $key: string; name: string }[],
   ) {
-    const brands = categories.slice(0, 4);
     const newest = products.slice(-4).reverse();
     const slides: HomeHighlightSlide[] = [];
-    const n = Math.min(brands.length, newest.length, 4);
+    const n = Math.min(newest.length, 8);
     for (let i = 0; i < n; i++) {
-      slides.push({ kind: 'brand', category: brands[i] });
       slides.push({ kind: 'product', product: newest[i] });
     }
     this.highlightSlides = slides;
@@ -107,6 +108,29 @@ export class HomeComponent implements OnInit, OnDestroy {
       Number.isFinite(discounted) &&
       discounted < original
     );
+  }
+
+  submitNewsletter(): void {
+    const email = this.newsletterEmail.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
+      this.newsletterFeedback = {
+        type: 'error',
+        text: 'Please enter a valid email address.',
+      };
+      return;
+    }
+    this.newsletterFeedback = {
+      type: 'success',
+      text: 'Thanks for subscribing. You will receive new-arrival updates soon.',
+    };
+    this.newsletterEmail = '';
+  }
+
+  private isWatchProduct(p: Product): boolean {
+    const title = (p?.title || '').toLowerCase();
+    const category = (p?.category || '').toLowerCase();
+    return title.includes('watch') || category.includes('watch') || category.startsWith('cat-');
   }
 
   ngOnDestroy() {

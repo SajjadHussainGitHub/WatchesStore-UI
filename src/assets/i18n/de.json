@@ -1,0 +1,85 @@
+{
+  "COMMON": {
+    "GO": "Los"
+  },
+  "LANG": {
+    "ENGLISH": "Englisch",
+    "ARABIC": "Arabisch",
+    "FRENCH": "Franzoesisch",
+    "GERMAN": "Deutsch"
+  },
+  "NAV": {
+    "ANNOUNCEMENT": "KOSTENLOSER VERSAND / ORIGINALPRODUKTE / AFTER-SALES-SERVICE / AUTORISIERTER E-HAENDLER / MULTI-MARKEN-PORTFOLIO",
+    "HOME": "Startseite",
+    "COLLECTIONS": "Kollektionen",
+    "MANAGE_PRODUCTS": "Produkte verwalten",
+    "SEARCH_PLACEHOLDER": "Uhren suchen...",
+    "CHOOSE_LANGUAGE": "Sprache waehlen",
+    "DISPLAY_LANGUAGE": "Anzeigesprache",
+    "CHOOSE_CURRENCY": "Waehrung waehlen",
+    "DISPLAY_CURRENCY": "Anzeigewaehrung",
+    "YOUR_CART": "Ihr Warenkorb",
+    "PCS": "Stk",
+    "VIEW_CART": "Warenkorb anzeigen",
+    "CART_EMPTY": "Warenkorb ist leer",
+    "SIGN_IN": "Anmelden",
+    "MY_ORDERS": "Meine Bestellungen",
+    "MANAGE_ORDERS": "Bestellungen verwalten",
+    "BULK_PRODUCT_UPLOAD": "Massenprodukt-Upload",
+    "MANAGE_CATEGORIES": "Kategorien verwalten",
+    "HOME_SLIDER": "Home-Slider (Neuheiten)",
+    "MARKETPLACE": "Marketplace (kostenlose Konnektoren)",
+    "LOGOUT": "Abmelden",
+    "BRANDS": "Marken",
+    "GENDER": "Geschlecht",
+    "MEN": "Herren",
+    "WOMEN": "Damen",
+    "UNISEX": "Unisex",
+    "STORE_LOCATION": "Filialstandort",
+    "LOCATION_1": "Dubai Mall, Downtown Dubai",
+    "LOCATION_2": "The Galleria, Abu Dhabi",
+    "LOCATION_3": "Mall of the Emirates, Dubai"
+  },
+  "PRODUCTS": {
+    "prod-rolex-1": {
+      "TITLE": "Rolex Uhr 01",
+      "DESCRIPTION": "Rolex Uhr 01 verbindet elegante Details mit Alltagstauglichkeit, klarer Ablesbarkeit und zuverlaessiger Ganggenauigkeit."
+    },
+    "prod-rolex-2": {
+      "TITLE": "Rolex Uhr 02",
+      "DESCRIPTION": "Rolex Uhr 02 bietet ikonisches Design und hohen Tragekomfort fuer den ganzen Tag."
+    },
+    "prod-omega-1": {
+      "TITLE": "Omega Uhr 01",
+      "DESCRIPTION": "Omega Uhr 01 liefert sportlich-luxurioesen Stil mit praeziser Verarbeitung und starker Lesbarkeit."
+    },
+    "prod-omega-2": {
+      "TITLE": "Omega Uhr 02",
+      "DESCRIPTION": "Omega Uhr 02 kombiniert modernes Design mit robuster Alltagstauglichkeit fuer anspruchsvolle Sammler."
+    },
+    "prod-seiko-1": {
+      "TITLE": "Seiko Uhr 01",
+      "DESCRIPTION": "Seiko Uhr 01 bietet starken Gegenwert mit solider Bauweise und ausgewogenen Proportionen."
+    },
+    "prod-seiko-2": {
+      "TITLE": "Seiko Uhr 02",
+      "DESCRIPTION": "Seiko Uhr 02 ist auf taegliche Vielseitigkeit ausgelegt und bietet angenehmen Tragekomfort."
+    },
+    "prod-casio-1": {
+      "TITLE": "Casio Uhr 01",
+      "DESCRIPTION": "Casio Uhr 01 setzt auf praktische Funktionalitaet, robuste Qualitaet und gute Ablesbarkeit."
+    },
+    "prod-casio-2": {
+      "TITLE": "Casio Uhr 02",
+      "DESCRIPTION": "Casio Uhr 02 verbindet moderne Nutzbarkeit mit leichtem Tragegefuehl fuer den Alltag."
+    },
+    "prod-tissot-1": {
+      "TITLE": "Tissot Uhr 01",
+      "DESCRIPTION": "Tissot Uhr 01 vereint schweizerisch inspirierte Eleganz mit zeitgemaessen Proportionen."
+    },
+    "prod-tissot-2": {
+      "TITLE": "Tissot Uhr 02",
+      "DESCRIPTION": "Tissot Uhr 02 kombiniert klare Aesthetik und verlaessliche Leistung fuer langfristigen Wert."
+    }
+  }
+}

@@ -29,7 +29,7 @@
         >
           <img
             [src]="pdpGalleryUrls[i]"
-            [alt]="label + ' of ' + product.title"
+            [alt]="label + ' of ' + (product | productText : 'title')"
             class="pd-thumb__img"
           />
           <span class="pd-thumb__label">{{ label }}</span>
@@ -58,12 +58,26 @@
 
       <div class="row pd-hero-row">
         <div class="col-md-7 pd-gallery">
-          <div class="pd-gallery__frame">
+          <div
+            class="pd-gallery__frame"
+            [class.pd-gallery__frame--magnify]="magnifierActive"
+            (mousemove)="onGalleryMouseMove($event)"
+            (mouseleave)="onGalleryMouseLeave()"
+            (click)="openLightbox()"
+            (keydown)="onGalleryKeydown($event)"
+            [style.--zoom-x.%]="magnifierXPercent"
+            [style.--zoom-y.%]="magnifierYPercent"
+            [style.--zoom-image]="'url(' + selectedImageUrl + ')'"
+            role="button"
+            tabindex="0"
+            aria-label="Open zoomed product image"
+          >
             <img
               [src]="selectedImageUrl"
-              [alt]="product.title"
+              [alt]="product | productText : 'title'"
               class="pd-gallery__img img-fluid"
             />
+            <span class="pd-gallery__zoom-hint">Hover to magnify - Click to zoom</span>
           </div>
 
           <!-- Mobile / sm: alternate control strip (hidden on lg where sidebar thumbs exist) -->
@@ -82,7 +96,7 @@
 
         <div class="col-md-5 pd-buy">
           <p class="pd-buy__eyebrow">{{ brandName }}</p>
-          <h1 class="pd-buy__title">{{ product.title }}</h1>
+          <h1 class="pd-buy__title">{{ product | productText : 'title' }}</h1>
           <p class="pd-buy__sku text-muted mb-1" *ngIf="product.modelNumber">
             Model <span class="pd-buy__mono">{{ product.modelNumber }}</span>
           </p>
@@ -135,7 +149,7 @@
 
       <section class="pd-section pd-overview" id="pd-overview" *ngIf="product.longDescription">
         <h2 class="pd-section__title pd-section__title--lg">Overview</h2>
-        <p class="pd-overview__copy">{{ product.longDescription }}</p>
+        <p class="pd-overview__copy">{{ product | productText : 'description' }}</p>
       </section>
 
       <section
@@ -300,4 +314,25 @@
       </ng-container>
     </div>
   </div>
+</div>
+
+<div
+  *ngIf="lightboxOpen && product"
+  class="pd-lightbox"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="'Zoomed image of ' + (product | productText : 'title')"
+  tabindex="0"
+  (keydown)="onLightboxKeydown($event)"
+  (click)="onLightboxBackdropClick($event)"
+>
+  <button
+    type="button"
+    class="pd-lightbox__close"
+    (click)="closeLightbox()"
+    aria-label="Close zoomed image"
+  >
+    &times;
+  </button>
+  <img [src]="selectedImageUrl" [alt]="product | productText : 'title'" class="pd-lightbox__img" />
 </div>

@@ -19,22 +19,7 @@ export class CategoryService {
     'Omega',
     'Seiko',
     'Casio',
-    'Citizen',
     'Tissot',
-    'Tag Heuer',
-    'Longines',
-    'Breitling',
-    'Rado',
-    'Fossil',
-    'Timex',
-    'Hamilton',
-    'Oris',
-    'Hublot',
-    'Panerai',
-    'Cartier',
-    'Audemars Piguet',
-    'Patek Philippe',
-    'IWC',
   ];
 
   private readonly categoriesSubject = new BehaviorSubject<Category[]>(this.readCategories());
@@ -90,23 +75,22 @@ export class CategoryService {
   }
 
   private readCategories(): Category[] {
+    const seed = this.buildDefaultCategories();
+    const allowed = new Set(seed.map((c) => c.$key));
     const raw = localStorage.getItem(this.storageKey);
     if (!raw) {
-      const seed = this.buildDefaultCategories();
       localStorage.setItem(this.storageKey, JSON.stringify(seed));
       return [...seed];
     }
     try {
       const parsed = JSON.parse(raw) as unknown;
       const list = this.normalizeList(parsed);
-      if (!list.length) {
-        const seed = this.buildDefaultCategories();
-        localStorage.setItem(this.storageKey, JSON.stringify(seed));
-        return [...seed];
-      }
-      return list.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+      const filtered = list.filter((c) => allowed.has(c.$key));
+      const byKey = new Map(filtered.map((c) => [c.$key, c]));
+      const merged = seed.map((s) => byKey.get(s.$key) || s);
+      localStorage.setItem(this.storageKey, JSON.stringify(merged));
+      return merged;
     } catch {
-      const seed = this.buildDefaultCategories();
       localStorage.setItem(this.storageKey, JSON.stringify(seed));
       return [...seed];
     }

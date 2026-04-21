@@ -3,13 +3,14 @@
 @import "font-awesome/css/font-awesome.css";
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
-$primary-color: #b89146;
-$primary-color-hover: #9f7b37;
+$primary-color: #ff8c00;
+$primary-color-hover: #e67700;
 
 body {
-  padding-top: 108px;
+  padding-top: 140px;
   min-height: 100vh;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 14% 4%,
       rgba(214, 184, 122, 0.22) 0%,
       rgba(214, 184, 122, 0) 34%
@@ -26,7 +27,7 @@ body {
 
 @media (max-width: 991.98px) {
   body {
-    padding-top: 88px;
+    padding-top: 120px;
   }
 }
 
@@ -92,6 +93,24 @@ h3 {
 .btn-primary:disabled {
   background-color: $primary-color;
   border-color: $primary-color;
+}
+
+.btn-secondary,
+.btn-dark {
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: #fff;
+}
+
+.btn-secondary:hover,
+.btn-dark:hover {
+  background-color: $primary-color-hover;
+  border-color: $primary-color-hover;
+  color: #fff;
+}
+
+.fa {
+  color: $primary-color;
 }
 
 .form-control:focus {

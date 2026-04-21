@@ -735,6 +735,20 @@
   border-radius: 0;
 }
 
+.home-newsletter__feedback {
+  margin-top: 0.65rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.home-newsletter__feedback--success {
+  color: #bbf7d0;
+}
+
+.home-newsletter__feedback--error {
+  color: #fecaca;
+}
+
 .home-newsletter small.text-muted {
   color: rgba(203, 213, 225, 0.75) !important;
 }

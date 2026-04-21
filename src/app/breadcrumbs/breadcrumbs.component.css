@@ -10,8 +10,8 @@
 
   padding-left: clamp(0.75rem, 3vw, 1.5rem);
   padding-right: clamp(0.75rem, 3vw, 1.5rem);
-  padding-top: 0.45rem;
-  padding-bottom: 0.45rem;
+  padding-top: 0.15rem;
+  padding-bottom: 0.35rem;
   margin-top: 0;
   background: linear-gradient(
     180deg,

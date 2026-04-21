@@ -7,35 +7,27 @@ import { ProductReview } from '../../interfaces/product-review';
 @Injectable()
 export class ProductService {
   private readonly storageKey = 'eshop.products';
-  /** Bundled JPEGs under `src/assets/products/{1..POOL}.jpg` (shared visual pool). */
-  private readonly productImagePool = 48;
-  /** Hero images by model number (all three views use the same file when only one asset exists). */
-  private readonly heroImageByModelNumber: Record<string, string> = {
-    'MW-48144': 'assets/products/Rolex_MW-48144.png',
+  /** Curated catalog image per product key. */
+  private readonly curatedImageByProductKey: Record<string, string> = {
+    'prod-rolex-1': 'assets/products/watch-1.png',
+    'prod-rolex-2': 'assets/products/watch-2.png',
+    'prod-omega-1': 'assets/products/watch-3.png',
+    'prod-omega-2': 'assets/products/watch-4.png',
+    'prod-seiko-1': 'assets/products/watch-1.png',
+    'prod-seiko-2': 'assets/products/watch-2.png',
+    'prod-casio-1': 'assets/products/watch-3.png',
+    'prod-casio-2': 'assets/products/watch-4.png',
+    'prod-tissot-1': 'assets/products/watch-1.png',
+    'prod-tissot-2': 'assets/products/watch-2.png',
   };
   private readonly brands = [
     'Rolex',
     'Omega',
     'Seiko',
     'Casio',
-    'Citizen',
     'Tissot',
-    'Tag Heuer',
-    'Longines',
-    'Breitling',
-    'Rado',
-    'Fossil',
-    'Timex',
-    'Hamilton',
-    'Oris',
-    'Hublot',
-    'Panerai',
-    'Cartier',
-    'Audemars Piguet',
-    'Patek Philippe',
-    'IWC',
   ];
-  private readonly productsPerBrand = 12;
+  private readonly productsPerBrand = 2;
   private readonly reviewerNames = [
     'Alex M.',
     'Jordan K.',
@@ -298,8 +290,7 @@ export class ProductService {
       localStorage.setItem(this.storageKey, JSON.stringify(this.initialProducts));
       return [...this.initialProducts];
     }
-
-    const migrated = parsed.map((p) => this.ensureProductFields(p));
+    const migrated = this.sanitizeProducts(parsed);
     localStorage.setItem(this.storageKey, JSON.stringify(migrated));
     return migrated;
   }
@@ -310,23 +301,11 @@ export class ProductService {
   }
 
   /**
-   * Maps each product to three asset paths: optional hero PNG by model, else JPEG pool.
+   * Maps each product to three asset paths from curated bundled images.
    */
   private viewImageUrlsForProductKey(productKey: string): string[] {
-    const model = this.buildModelNumber(productKey);
-    const hero = this.heroImageByModelNumber[model];
-    if (hero) {
-      return [hero, hero, hero];
-    }
-    const h = Math.abs(this.hashToInt(productKey));
-    const i1 = (h % this.productImagePool) + 1;
-    const i2 = ((h + 17) % this.productImagePool) + 1;
-    const i3 = ((h + 31) % this.productImagePool) + 1;
-    return [
-      `assets/products/${i1}.jpg`,
-      `assets/products/${i2}.jpg`,
-      `assets/products/${i3}.jpg`,
-    ];
+    const img = this.curatedImageByProductKey[productKey] || 'assets/products/watch-1.png';
+    return [img, img, img];
   }
 
   private usesBundledProductImages(p: Product): boolean {
@@ -418,6 +397,32 @@ export class ProductService {
     }
 
     return products;
+  }
+
+  /**
+   * Keeps only the curated 10 products (5 categories x 2 products), dropping all others.
+   */
+  private sanitizeProducts(parsed: Product[]): Product[] {
+    const byKey = new Map(parsed.map((p) => [p.$key, p]));
+    return this.initialProducts.map((seed) => {
+      const existing = byKey.get(seed.$key);
+      if (!existing) {
+        return { ...seed };
+      }
+      // Keep stable curated identity/image/category while preserving editable commerce fields.
+      return this.ensureProductFields({
+        ...seed,
+        price: existing.price || seed.price,
+        discountPrice: existing.discountPrice ?? seed.discountPrice,
+        discountPercent: existing.discountPercent ?? seed.discountPercent,
+        rating: existing.rating ?? seed.rating,
+        ratingCount: existing.ratingCount ?? seed.ratingCount,
+        inventoryQty: existing.inventoryQty ?? seed.inventoryQty,
+        reviews: existing.reviews ?? seed.reviews,
+        attributes: existing.attributes ?? seed.attributes,
+        longDescription: existing.longDescription || seed.longDescription,
+      });
+    });
   }
 
   private ensureProductFields(p: Product): Product {

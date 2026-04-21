@@ -1,3 +1,7 @@
+<div class="store-announcement-bar" role="status" aria-label="Store announcements">
+  {{ 'NAV.ANNOUNCEMENT' | translate }}
+</div>
+
 <nav
   class="navbar navbar-expand-lg navbar-dark fixed-top store-navbar"
   role="navigation"
@@ -30,13 +34,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto store-navbar__links">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/">Home</a>
+          <a class="nav-link" routerLink="/">{{ 'NAV.HOME' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/products">Collections</a>
+          <a class="nav-link" routerLink="/products">{{ 'NAV.COLLECTIONS' | translate }}</a>
         </li>
         <li class="nav-item" *ngIf="appUser?.isAdmin">
-          <a class="nav-link" routerLink="/admin/products">Manage Products</a>
+          <a class="nav-link" routerLink="/admin/products">{{ 'NAV.MANAGE_PRODUCTS' | translate }}</a>
         </li>
       </ul>
 
@@ -52,10 +56,10 @@
             class="form-control"
             name="q"
             [(ngModel)]="searchKeyword"
-            placeholder="Search watches..."
+            [placeholder]="'NAV.SEARCH_PLACEHOLDER' | translate"
           />
           <div class="input-group-append">
-            <button type="submit" class="btn btn-dark">Go</button>
+            <button type="submit" class="btn btn-dark">{{ 'COMMON.GO' | translate }}</button>
           </div>
         </div>
       </form>
@@ -65,8 +69,38 @@
           <button
             ngbDropdownToggle
             type="button"
+            class="store-navbar__language-btn"
+            [attr.aria-label]="'NAV.CHOOSE_LANGUAGE' | translate"
+            id="languageMenu"
+          >
+            <i class="fa fa-language" aria-hidden="true"></i>
+            <span>{{ selectedLanguage | uppercase }}</span>
+          </button>
+          <div
+            ngbDropdownMenu
+            class="store-navbar__dropdown store-navbar__dropdown--language"
+            aria-labelledby="languageMenu"
+          >
+            <div class="store-navbar__dropdown-header">{{ 'NAV.DISPLAY_LANGUAGE' | translate }}</div>
+            <button
+              *ngFor="let l of languages"
+              ngbDropdownItem
+              type="button"
+              class="dropdown-item"
+              [class.active]="l.code === selectedLanguage"
+              (click)="selectLanguage(l.code)"
+            >
+              {{ l.labelKey | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div ngbDropdown class="d-inline-block mr-2" display="dynamic">
+          <button
+            ngbDropdownToggle
+            type="button"
             class="store-navbar__currency-btn"
-            aria-label="Choose currency"
+            [attr.aria-label]="'NAV.CHOOSE_CURRENCY' | translate"
             id="currencyMenu"
           >
             <i class="fa fa-globe" aria-hidden="true"></i>
@@ -77,7 +111,7 @@
             class="store-navbar__dropdown store-navbar__dropdown--currency"
             aria-labelledby="currencyMenu"
           >
-            <div class="store-navbar__dropdown-header">Display currency</div>
+            <div class="store-navbar__dropdown-header">{{ 'NAV.DISPLAY_CURRENCY' | translate }}</div>
             <button
               *ngFor="let c of currencyService.currencies"
               ngbDropdownItem
@@ -104,7 +138,7 @@
               }}</span>
             </button>
             <div ngbDropdownMenu class="store-navbar__dropdown">
-              <div class="store-navbar__dropdown-header">Your Cart</div>
+              <div class="store-navbar__dropdown-header">{{ 'NAV.YOUR_CART' | translate }}</div>
               <ng-container *ngIf="cart.items?.length; else emptyCart">
                 <div
                   *ngFor="let item of cart.items.slice(0, 4)"
@@ -115,7 +149,7 @@
                       {{ item.title }}
                     </div>
                     <div class="store-navbar__cart-row-sub">
-                      {{ item.quantity }} pcs
+                      {{ item.quantity }} {{ 'NAV.PCS' | translate }}
                     </div>
                   </div>
                   <button
@@ -129,12 +163,12 @@
                 </div>
                 <div class="text-right mt-2">
                   <a class="btn btn-sm btn-dark" routerLink="/shopping-cart"
-                    >View Cart</a
+                    >{{ 'NAV.VIEW_CART' | translate }}</a
                   >
                 </div>
               </ng-container>
               <ng-template #emptyCart>
-                <div class="text-muted p-2">Cart is empty</div>
+                <div class="text-muted p-2">{{ 'NAV.CART_EMPTY' | translate }}</div>
               </ng-template>
             </div>
           </div>
@@ -144,7 +178,7 @@
           <div class="store-navbar__auth-links">
             <a class="store-navbar__account-btn" routerLink="/login">
               <i class="fa fa-user-o"></i>
-              <span>Sign In</span>
+              <span>{{ 'NAV.SIGN_IN' | translate }}</span>
             </a>
             <!-- <a class="store-navbar__account-btn" routerLink="/register">
               <i class="fa fa-user-plus"></i>
@@ -171,32 +205,93 @@
             class="store-navbar__dropdown"
             aria-labelledby="accountMenu"
           >
-            <a class="dropdown-item" routerLink="/my/orders">My Orders</a>
+            <a class="dropdown-item" routerLink="/my/orders">{{ 'NAV.MY_ORDERS' | translate }}</a>
             <ng-container *ngIf="appUser.isAdmin">
               <a class="dropdown-item" routerLink="/admin/orders"
-                >Manage Orders</a
+                >{{ 'NAV.MANAGE_ORDERS' | translate }}</a
               >
               <a class="dropdown-item" routerLink="/admin/products"
-                >Manage Products</a
+                >{{ 'NAV.MANAGE_PRODUCTS' | translate }}</a
               >
               <a class="dropdown-item" routerLink="/admin/products/bulk-upload"
-                >Bulk Product Upload</a
+                >{{ 'NAV.BULK_PRODUCT_UPLOAD' | translate }}</a
               >
               <a class="dropdown-item" routerLink="/admin/categories"
-                >Manage Categories</a
+                >{{ 'NAV.MANAGE_CATEGORIES' | translate }}</a
               >
               <a class="dropdown-item" routerLink="/admin/home-spotlight"
-                >Home slider (new arrivals)</a
+                >{{ 'NAV.HOME_SLIDER' | translate }}</a
               >
               <a class="dropdown-item" routerLink="/admin/marketplace"
-                >Marketplace (Free connectors)</a
+                >{{ 'NAV.MARKETPLACE' | translate }}</a
               >
             </ng-container>
             <button class="dropdown-item" type="button" (click)="logout()">
-              Logout
+              {{ 'NAV.LOGOUT' | translate }}
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<nav class="store-subnav" aria-label="Secondary navigation">
+  <div class="container store-subnav__inner">
+    <div ngbDropdown class="d-inline-block">
+      <button
+        ngbDropdownToggle
+        type="button"
+        class="store-subnav__btn"
+        id="brandsMenu"
+      >
+        <i class="fa fa-diamond" aria-hidden="true"></i>
+        <span>{{ 'NAV.BRANDS' | translate }}</span>
+      </button>
+      <div ngbDropdownMenu class="store-subnav__menu" aria-labelledby="brandsMenu">
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Rolex' }">Rolex</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Omega' }">Omega</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Seiko' }">Seiko</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Casio' }">Casio</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Tissot' }">Tissot</a>
+      </div>
+    </div>
+
+    <div ngbDropdown class="d-inline-block">
+      <button
+        ngbDropdownToggle
+        type="button"
+        class="store-subnav__btn"
+        id="genderMenu"
+      >
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span>{{ 'NAV.GENDER' | translate }}</span>
+      </button>
+      <div ngbDropdownMenu class="store-subnav__menu" aria-labelledby="genderMenu">
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Men' }">{{ 'NAV.MEN' | translate }}</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Women' }">{{ 'NAV.WOMEN' | translate }}</a>
+        <a ngbDropdownItem routerLink="/products" [queryParams]="{ q: 'Unisex' }">{{ 'NAV.UNISEX' | translate }}</a>
+      </div>
+    </div>
+
+    <div ngbDropdown class="d-inline-block">
+      <button
+        ngbDropdownToggle
+        type="button"
+        class="store-subnav__btn"
+        id="storeLocationMenu"
+      >
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        <span>{{ 'NAV.STORE_LOCATION' | translate }}</span>
+      </button>
+      <div
+        ngbDropdownMenu
+        class="store-subnav__menu store-subnav__menu--location"
+        aria-labelledby="storeLocationMenu"
+      >
+        <div class="store-subnav__location-row">{{ 'NAV.LOCATION_1' | translate }}</div>
+        <div class="store-subnav__location-row">{{ 'NAV.LOCATION_2' | translate }}</div>
+        <div class="store-subnav__location-row">{{ 'NAV.LOCATION_3' | translate }}</div>
       </div>
     </div>
   </div>

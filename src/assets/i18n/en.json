@@ -1,0 +1,85 @@
+{
+  "COMMON": {
+    "GO": "Go"
+  },
+  "LANG": {
+    "ENGLISH": "English",
+    "ARABIC": "Arabic",
+    "FRENCH": "French",
+    "GERMAN": "German"
+  },
+  "NAV": {
+    "ANNOUNCEMENT": "FREE SHIPPING / GENUINE PRODUCTS / AFTER SALE SERVICE / AUTHORIZED E-TAILER / MULTI-BRAND PORTFOLIO",
+    "HOME": "Home",
+    "COLLECTIONS": "Collections",
+    "MANAGE_PRODUCTS": "Manage Products",
+    "SEARCH_PLACEHOLDER": "Search watches...",
+    "CHOOSE_LANGUAGE": "Choose language",
+    "DISPLAY_LANGUAGE": "Display language",
+    "CHOOSE_CURRENCY": "Choose currency",
+    "DISPLAY_CURRENCY": "Display currency",
+    "YOUR_CART": "Your Cart",
+    "PCS": "pcs",
+    "VIEW_CART": "View Cart",
+    "CART_EMPTY": "Cart is empty",
+    "SIGN_IN": "Sign In",
+    "MY_ORDERS": "My Orders",
+    "MANAGE_ORDERS": "Manage Orders",
+    "BULK_PRODUCT_UPLOAD": "Bulk Product Upload",
+    "MANAGE_CATEGORIES": "Manage Categories",
+    "HOME_SLIDER": "Home slider (new arrivals)",
+    "MARKETPLACE": "Marketplace (Free connectors)",
+    "LOGOUT": "Logout",
+    "BRANDS": "Brands",
+    "GENDER": "Gender",
+    "MEN": "Men",
+    "WOMEN": "Women",
+    "UNISEX": "Unisex",
+    "STORE_LOCATION": "Store Location",
+    "LOCATION_1": "Dubai Mall, Downtown Dubai",
+    "LOCATION_2": "The Galleria, Abu Dhabi",
+    "LOCATION_3": "Mall of the Emirates, Dubai"
+  },
+  "PRODUCTS": {
+    "prod-rolex-1": {
+      "TITLE": "Rolex Watch 01",
+      "DESCRIPTION": "Rolex Watch 01 balances refined detailing with everyday wearability, offering crisp dial legibility and dependable timekeeping."
+    },
+    "prod-rolex-2": {
+      "TITLE": "Rolex Watch 02",
+      "DESCRIPTION": "Rolex Watch 02 combines iconic Rolex styling with a comfortable case profile for all-day use and reliable performance."
+    },
+    "prod-omega-1": {
+      "TITLE": "Omega Watch 01",
+      "DESCRIPTION": "Omega Watch 01 delivers a sporty-luxury feel with precise finishing, clear readability, and trusted daily accuracy."
+    },
+    "prod-omega-2": {
+      "TITLE": "Omega Watch 02",
+      "DESCRIPTION": "Omega Watch 02 pairs modern design with practical durability, built for collectors who value style and reliability."
+    },
+    "prod-seiko-1": {
+      "TITLE": "Seiko Watch 01",
+      "DESCRIPTION": "Seiko Watch 01 offers impressive value with robust construction, balanced proportions, and dependable movement performance."
+    },
+    "prod-seiko-2": {
+      "TITLE": "Seiko Watch 02",
+      "DESCRIPTION": "Seiko Watch 02 is tuned for everyday versatility, with comfortable wear, clean dial design, and trusted durability."
+    },
+    "prod-casio-1": {
+      "TITLE": "Casio Watch 01",
+      "DESCRIPTION": "Casio Watch 01 focuses on practical functionality, resilient build quality, and easy readability in daily conditions."
+    },
+    "prod-casio-2": {
+      "TITLE": "Casio Watch 02",
+      "DESCRIPTION": "Casio Watch 02 combines modern utility with lightweight comfort, making it a reliable companion for daily wear."
+    },
+    "prod-tissot-1": {
+      "TITLE": "Tissot Watch 01",
+      "DESCRIPTION": "Tissot Watch 01 blends Swiss-inspired elegance with contemporary proportions for a refined yet practical wrist presence."
+    },
+    "prod-tissot-2": {
+      "TITLE": "Tissot Watch 02",
+      "DESCRIPTION": "Tissot Watch 02 brings clean aesthetics and reliable performance together for buyers seeking timeless value."
+    }
+  }
+}

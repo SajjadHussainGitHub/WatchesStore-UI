@@ -1,0 +1,85 @@
+{
+  "COMMON": {
+    "GO": "Aller"
+  },
+  "LANG": {
+    "ENGLISH": "Anglais",
+    "ARABIC": "Arabe",
+    "FRENCH": "Francais",
+    "GERMAN": "Allemand"
+  },
+  "NAV": {
+    "ANNOUNCEMENT": "LIVRAISON GRATUITE / PRODUITS AUTHENTIQUES / SERVICE APRES-VENTE / E-REVENDEUR AGREE / PORTEFEUILLE MULTI-MARQUES",
+    "HOME": "Accueil",
+    "COLLECTIONS": "Collections",
+    "MANAGE_PRODUCTS": "Gerer les produits",
+    "SEARCH_PLACEHOLDER": "Rechercher des montres...",
+    "CHOOSE_LANGUAGE": "Choisir la langue",
+    "DISPLAY_LANGUAGE": "Langue d'affichage",
+    "CHOOSE_CURRENCY": "Choisir la devise",
+    "DISPLAY_CURRENCY": "Devise d'affichage",
+    "YOUR_CART": "Votre panier",
+    "PCS": "pcs",
+    "VIEW_CART": "Voir le panier",
+    "CART_EMPTY": "Le panier est vide",
+    "SIGN_IN": "Se connecter",
+    "MY_ORDERS": "Mes commandes",
+    "MANAGE_ORDERS": "Gerer les commandes",
+    "BULK_PRODUCT_UPLOAD": "Import de produits en masse",
+    "MANAGE_CATEGORIES": "Gerer les categories",
+    "HOME_SLIDER": "Slider d'accueil (nouveautes)",
+    "MARKETPLACE": "Marketplace (connecteurs gratuits)",
+    "LOGOUT": "Se deconnecter",
+    "BRANDS": "Marques",
+    "GENDER": "Genre",
+    "MEN": "Hommes",
+    "WOMEN": "Femmes",
+    "UNISEX": "Unisexe",
+    "STORE_LOCATION": "Emplacement du magasin",
+    "LOCATION_1": "Dubai Mall, Downtown Dubai",
+    "LOCATION_2": "The Galleria, Abou Dhabi",
+    "LOCATION_3": "Mall of the Emirates, Dubai"
+  },
+  "PRODUCTS": {
+    "prod-rolex-1": {
+      "TITLE": "Rolex Montre 01",
+      "DESCRIPTION": "Rolex Montre 01 allie finition raffinee et confort quotidien, avec une lisibilite nette et une precision fiable."
+    },
+    "prod-rolex-2": {
+      "TITLE": "Rolex Montre 02",
+      "DESCRIPTION": "Rolex Montre 02 propose un style iconique avec un boitier confortable pour une utilisation toute la journee."
+    },
+    "prod-omega-1": {
+      "TITLE": "Omega Montre 01",
+      "DESCRIPTION": "Omega Montre 01 offre une allure sport-luxe, une finition precise et une excellente lisibilite."
+    },
+    "prod-omega-2": {
+      "TITLE": "Omega Montre 02",
+      "DESCRIPTION": "Omega Montre 02 combine design moderne et robustesse pratique pour les amateurs exigeants."
+    },
+    "prod-seiko-1": {
+      "TITLE": "Seiko Montre 01",
+      "DESCRIPTION": "Seiko Montre 01 apporte un excellent rapport qualite-prix avec une construction solide et un port equilibre."
+    },
+    "prod-seiko-2": {
+      "TITLE": "Seiko Montre 02",
+      "DESCRIPTION": "Seiko Montre 02 est pensee pour la polyvalence quotidienne avec un cadran propre et un bon confort."
+    },
+    "prod-casio-1": {
+      "TITLE": "Casio Montre 01",
+      "DESCRIPTION": "Casio Montre 01 met l'accent sur la fonctionnalite, la robustesse et la lisibilite au quotidien."
+    },
+    "prod-casio-2": {
+      "TITLE": "Casio Montre 02",
+      "DESCRIPTION": "Casio Montre 02 associe utilite moderne et legerete pour un usage fiable tous les jours."
+    },
+    "prod-tissot-1": {
+      "TITLE": "Tissot Montre 01",
+      "DESCRIPTION": "Tissot Montre 01 melange elegance d'inspiration suisse et proportions contemporaines."
+    },
+    "prod-tissot-2": {
+      "TITLE": "Tissot Montre 02",
+      "DESCRIPTION": "Tissot Montre 02 unit esthetique epuree et performance fiable pour une valeur durable."
+    }
+  }
+}

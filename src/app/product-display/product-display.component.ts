@@ -31,6 +31,10 @@ export class ProductDisplayComponent implements OnInit {
   reviewComment = '';
   submittingReview = false;
   reviewFeedback: { type: 'success' | 'error'; text: string } | null = null;
+  magnifierActive = false;
+  magnifierXPercent = 50;
+  magnifierYPercent = 50;
+  lightboxOpen = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,6 +81,7 @@ export class ProductDisplayComponent implements OnInit {
 
   selectView(index: number) {
     this.selectedViewIndex = index;
+    this.magnifierActive = false;
   }
 
   private buildPdpGalleryUrls(p: Product): string[] {
@@ -98,6 +103,54 @@ export class ProductDisplayComponent implements OnInit {
       this.pdpGalleryUrls.length - 1,
     );
     return this.pdpGalleryUrls[i] || this.product?.imageUrl || '';
+  }
+
+  onGalleryMouseMove(event: MouseEvent): void {
+    const target = event.currentTarget as HTMLElement | null;
+    if (!target) {
+      return;
+    }
+    const rect = target.getBoundingClientRect();
+    if (!rect.width || !rect.height) {
+      return;
+    }
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    this.magnifierXPercent = Math.max(0, Math.min(100, x));
+    this.magnifierYPercent = Math.max(0, Math.min(100, y));
+    this.magnifierActive = true;
+  }
+
+  onGalleryMouseLeave(): void {
+    this.magnifierActive = false;
+  }
+
+  openLightbox(): void {
+    this.lightboxOpen = true;
+    this.magnifierActive = false;
+  }
+
+  onGalleryKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.openLightbox();
+    }
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen = false;
+  }
+
+  onLightboxBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeLightbox();
+    }
+  }
+
+  onLightboxKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeLightbox();
+    }
   }
 
   get brandName(): string {

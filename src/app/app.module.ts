@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
@@ -49,6 +50,12 @@ import { ShopCurrencyPipe } from './pipes/shop-currency.pipe';
 import { HomeSpotlightService } from './services/home-spotlight/home-spotlight.service';
 import { ShippingService } from './services/shipping/shipping.service';
 import { InventorySyncService } from './services/inventory-sync/inventory-sync.service';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  provideTranslateHttpLoader,
+  TranslateHttpLoader,
+} from '@ngx-translate/http-loader';
+import { ProductTextPipe } from './pipes/product-text.pipe';
 
 @NgModule({
   declarations: [
@@ -77,10 +84,12 @@ import { InventorySyncService } from './services/inventory-sync/inventory-sync.s
     AdminHomeSpotlightComponent,
     AdminBulkProductsComponent,
     ShopCurrencyPipe,
+    ProductTextPipe,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -89,6 +98,12 @@ import { InventorySyncService } from './services/inventory-sync/inventory-sync.s
     MatRadioModule,
     MatSelectModule,
     NgbModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useClass: TranslateHttpLoader,
+      },
+    }),
     RouterModule.forRoot([
       // Anonymous User
       {
@@ -195,6 +210,10 @@ import { InventorySyncService } from './services/inventory-sync/inventory-sync.s
     MarketplaceService,
     InventorySyncService,
     CurrencyService,
+    ...provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json',
+    }),
   ],
   bootstrap: [AppComponent],
 })
