@@ -421,10 +421,19 @@
 }
 
 .store-subnav__location-row {
+  display: block;
   padding: 0.35rem 0.85rem;
   color: #334155;
   font-size: 0.84rem;
   font-weight: 600;
+  text-decoration: none;
+}
+
+.store-subnav__location-row:hover,
+.store-subnav__location-row:focus {
+  background: rgba(50, 117, 182, 0.1);
+  color: #0f172a;
+  outline: none;
 }
 
 @media (max-width: 991.98px) {

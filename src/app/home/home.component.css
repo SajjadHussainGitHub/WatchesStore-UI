@@ -556,28 +556,31 @@
 .home-brand-card {
   display: block;
   width: 100%;
-  padding: 1rem 0.85rem;
-  border-radius: 16px;
-  background: #fff;
-  border: 2px solid rgba(15, 23, 42, 0.06);
-  color: var(--home-ink);
+  padding: 1.05rem 0.9rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7eb 100%);
+  border: 1px solid rgba(255, 140, 0, 0.28);
+  color: #9a3412;
   font-weight: 800;
   text-align: center;
-  font-size: 0.92rem;
+  font-size: 0.93rem;
+  letter-spacing: 0.01em;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 8px 20px rgba(255, 140, 0, 0.09);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .home-brand-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(124, 58, 237, 0.25);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 140, 0, 0.65);
+  box-shadow: 0 14px 30px rgba(255, 140, 0, 0.2);
+  color: #7c2d12;
 }
 
 .home-section--tint .home-brand-card:hover {
-  border-color: rgba(201, 168, 108, 0.55);
-  box-shadow: 0 16px 32px rgba(124, 58, 237, 0.15),
-    0 0 0 1px rgba(201, 168, 108, 0.2);
+  border-color: rgba(255, 140, 0, 0.72);
+  box-shadow: 0 16px 32px rgba(255, 140, 0, 0.22),
+    0 0 0 1px rgba(255, 140, 0, 0.24);
 }
 
 .home-section--tint-cool .home-brand-card:hover {

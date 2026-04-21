@@ -67,7 +67,7 @@
   padding-bottom: 0.25rem;
   overflow-wrap: anywhere;
   word-break: break-word;
-  color: var(--store-crumb-ink-soft);
+  color: #ff8c00;
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -79,12 +79,12 @@
 }
 
 .breadcrumb-item.active {
-  color: var(--store-crumb-ink);
+  color: #e67700;
   font-weight: 700;
 }
 
 .breadcrumb-item a {
-  color: var(--store-crumb-ink-soft);
+  color: #ff8c00;
   font-weight: 600;
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -94,7 +94,7 @@
 }
 
 .breadcrumb-item a:hover {
-  color: #0f172a;
+  color: #e67700;
   border-bottom-color: var(--store-crumb-accent-bright);
   text-decoration: none;
 }
